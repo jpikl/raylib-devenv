@@ -68,13 +68,13 @@ RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/ra
     make PLATFORM=PLATFORM_DESKTOP && \
     make install PLATFORM=PLATFORM_DESKTOP && \
     # Dynamic shared version
-    make clean && \
-    make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
-    make install PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
+    #make clean && \
+    #make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
+    #make install PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
     # Static version (Web)
     make clean && \
     bash -c 'source /opt/emsdk/emsdk_env.sh && make PLATFORM=PLATFORM_WEB' && \
-    cp libraylib.a /usr/local/lib/libraylib.web.a && \
+    cp libraylib.a /usr/local/lib/libraylib_web.a && \
     # Get rid of the cloned repo
     rm -r /tmp/raylib
 
