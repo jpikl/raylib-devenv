@@ -4,6 +4,7 @@
 source /opt/emsdk/emsdk_env.sh &>/dev/null
 
 # Print executed command for easier debugging
-echo "$@"
+printf "%q " "$@"
+echo
 
 exec "$@"
