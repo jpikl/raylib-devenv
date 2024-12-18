@@ -63,20 +63,26 @@ ARG RAYLIB_VERSION=5.5
 
 RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/raylib.git /tmp/raylib && \
     cd /tmp/raylib/src && \
+    # Linux X11 static
+    make clean && \
+    make PLATFORM=PLATFORM_DESKTOP && \
+    make install PLATFORM=PLATFORM_DESKTOP RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/linux-x11-static && \
+    # Linux X11 shared
+    make clean && \
+    make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
+    make install PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/linux-x11-shared && \
+    # Linux Wayland static
+    make clean && \
+    make PLATFORM=PLATFORM_DESKTOP GLFW_LINUX_ENABLE_WAYLAND=TRUE GLFW_LINUX_ENABLE_X11=FALSE && \
+    make install PLATFORM=PLATFORM_DESKTOP  RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/linux-wayland-static && \
+    # Linux Wayland shared
+    make clean && \
+    make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED GLFW_LINUX_ENABLE_WAYLAND=TRUE GLFW_LINUX_ENABLE_X11=FALSE && \
+    make install PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/linux-wayland-shared && \
     # Web static
     make clean && \
     bash -c 'source /opt/emsdk/emsdk_env.sh && make PLATFORM=PLATFORM_WEB' && \
-    make install PLATFORM=PLATFORM_WEB && \
-    mv /usr/local/lib/libraylib.a /usr/local/lib/libraylib_web.a && \
-    # Desktop static
-    make clean && \
-    make PLATFORM=PLATFORM_DESKTOP && \
-    make install PLATFORM=PLATFORM_DESKTOP && \
-    mv /usr/local/lib/libraylib.a /usr/local/lib/libraylib_static.a && \
-    # Desktop shared
-    make clean && \
-    make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
-    make install PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED && \
+    make install PLATFORM=PLATFORM_WEB RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/web && \
     # Get rid of the cloned repo
     rm -r /tmp/raylib
 

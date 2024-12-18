@@ -11,7 +11,8 @@ mkdir -p "$OUTPUT_DIR"
 "$SCRIPT_DIR/../../run.sh" \
     cc \
     "$SCRIPT_DIR/main.c" \
-    -lraylib_static \
+    -L/usr/local/lib/raylib/linux-x11-static \
+    -lraylib \
     -lGL \
     -lm \
     -lpthread \
