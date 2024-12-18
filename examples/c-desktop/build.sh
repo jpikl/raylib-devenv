@@ -11,7 +11,7 @@ mkdir -p "$OUTPUT_DIR"
 "$SCRIPT_DIR/../../run.sh" \
     cc \
     "$SCRIPT_DIR/main.c" \
-    -lraylib \
+    -lraylib_static \
     -lGL \
     -lm \
     -lpthread \
