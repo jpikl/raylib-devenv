@@ -7,4 +7,5 @@ shellcheck \
     check.sh \
     entrypoint.sh \
     run.sh \
+    test.sh \
     examples/*/*.sh
