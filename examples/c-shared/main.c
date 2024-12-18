@@ -1,16 +1,13 @@
 #include <raylib.h>
+#include "../common/game.h"
 
 int main() {
-    InitWindow(640, 480, "Hello, world!");
-    SetTargetFPS(60);
+    GameInit();
 
     while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawText("Hello, world!", 250, 200, 20, DARKGRAY);
-        EndDrawing();
+        GameUpdate();
     }
 
-    CloseWindow();
+    GameQuit();
     return 0;
 }
