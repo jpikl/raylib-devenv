@@ -20,4 +20,4 @@ if [ -t 0 ] && [ -t 1 ] && [ ! "${CI-}" ]; then
     set -- --tty --interactive "$@"
 fi
 
-echo "$DOCKER" run "$@"
+"$DOCKER" run "$@"
