@@ -1,8 +1,15 @@
 #include <raylib.h>
+#include <stdlib.h>
 
-int main() {
+int main(int argc, char *argv[]) {
     InitWindow(640, 480, "Hello, world!");
     SetTargetFPS(60);
+
+    // Early quit for when running test suite
+    if (getenv("TEST")) {
+        CloseWindow();
+        return 0;
+    }
 
     while (!WindowShouldClose()) {
         BeginDrawing();
