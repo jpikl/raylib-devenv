@@ -1,5 +1,17 @@
 #!/usr/bin/env sh
 
-. ./config.sh
+set -eu
 
-"$DOCKER" run --rm --tty --interactive "$TAG" "$@"
+SCRIPT_DIR=$(dirname -- "$0")
+
+# shellcheck source=./config.sh
+. "$SCRIPT_DIR/config.sh"
+
+"$DOCKER" run \
+    --rm \
+    --tty \
+    --interactive \
+    --volume "$PWD:/mnt" \
+    --workdir /mnt \
+    "$TAG" \
+    "$@"
