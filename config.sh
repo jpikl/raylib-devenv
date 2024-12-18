@@ -11,6 +11,6 @@ if [ -x "$(command -v podman)" ]; then
 elif [ -x "$(command -v docker)" ]; then
     DOCKER=docker
 else
-    echo >&2 "$0: neither podman or docker is installed"
+    echo >&2 "Neither podman or docker is installed!"
     exit 1
 fi
