@@ -4,4 +4,6 @@ shellcheck -ax \
     build.sh \
     check.sh \
     entrypoint.sh \
-    run.sh
+    run.sh \
+    examples/*/*.sh
+
