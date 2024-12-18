@@ -17,3 +17,10 @@ mkdir -p "$OUTPUT_DIR"
     -lraylib_web \
     --shell-file "$SCRIPT_DIR/shell.html" \
     -o "$OUTPUT_DIR/index.html"
+
+if [ "${TEST-}" ]; then
+    assert() { sh -c "$1" || ( printf "\n\e[31mAssertion failed: \e[0m%s\n" "$1"; exit 1 ) }>&2
+    assert "[ -f '$OUTPUT_DIR/index.html' ]"
+    assert "[ -f '$OUTPUT_DIR/index.wasm' ]"
+    assert "[ -f '$OUTPUT_DIR/index.js' ]"
+fi
