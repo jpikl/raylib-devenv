@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -eu
+
 shellcheck \
     --check-sourced \
     --external-sources \
@@ -10,3 +12,5 @@ shellcheck \
     run.sh \
     test.sh \
     examples/*/*.sh
+
+printf "\e[32m%s\e[0m\n" "Check OK"
