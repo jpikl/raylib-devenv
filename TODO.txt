@@ -1,7 +1,7 @@
 Docker image
-- Add default user to the image
-- run.sh via docker uses the default user
-- run.sh via podman uses the default user
+[ ] Add default user to the image
+[ ] run.sh via docker uses the default user
+[ ] run.sh via podman uses the default user
 
 Target                       | Library | C example | Odin example
 -----------------------------|---------|-----------|--------------
@@ -15,5 +15,5 @@ Android                      | -       | -         | -
 Feature  | Desktop | Web | Android
 ---------|---------|-----|---------
 Textures | Yes     | Yes | -
-Audio    | -       | -   | -
-Input    | -       | -   | -
+Audio    | Yes     | Yes | -
+Input    | Yes     | Yes | -
