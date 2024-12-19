@@ -2,8 +2,6 @@
 
 set -eu
 
-SCRIPT_DIR=$(dirname -- "$0")
-OUTPUT_DIR="$SCRIPT_DIR/out"
+OUTPUT_DIR="$(dirname -- "$0")/out"
 
-# Use raylib dynamic libraries in the output directory
-LD_LIBRARY_PATH=$OUTPUT_DIR "$OUTPUT_DIR/game"
+LD_LIBRARY_PATH=$OUTPUT_DIR exec "$OUTPUT_DIR/game"

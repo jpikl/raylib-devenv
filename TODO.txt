@@ -5,15 +5,15 @@ Docker image
 
 Target                       | Library | C example | Odin example
 -----------------------------|---------|-----------|--------------
-Static (Linux)               | Yes     | Yes       | -            
-Shared (Linux)               | Yes     | Yes       | -            
-Static (Win64 cross compile) | -       | -         | -            
-Shared (Win64 cross compile) | -       | -         | -            
-Web                          | Yes     | Yes       | -            
-Android                      | -       | -         | -            
+Static (Linux)               | Yes     | Yes       | -
+Shared (Linux)               | Yes     | Yes       | -
+Static (Win64 cross compile) | -       | -         | -
+Shared (Win64 cross compile) | -       | -         | -
+Web                          | Yes     | Yes       | -
+Android                      | -       | -         | -
 
 Feature  | Desktop | Web | Android
 ---------|---------|-----|---------
-Textures | -       | -   | - 
-Audio    | -       | -   | - 
-Input    | -       | -   | - 
+Textures | Yes     | Yes | -
+Audio    | -       | -   | -
+Input    | -       | -   | -
