@@ -5,6 +5,7 @@ shellcheck \
     --external-sources \
     build.sh \
     check.sh \
+    clean.sh \
     entrypoint.sh \
     run.sh \
     test.sh \
