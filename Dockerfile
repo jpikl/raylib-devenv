@@ -97,3 +97,6 @@ COPY entrypoint.sh /usr/local/bin/entrypoint
 ENTRYPOINT ["entrypoint"]
 
 CMD ["bash"]
+
+# This can be used by scripts to detect whether we are in containerized environment or not.
+ENV INSIDE_RAYLIB_DEVENV=1

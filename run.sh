@@ -2,12 +2,14 @@
 
 set -eu
 
-MOUNT_DIR=$PWD
+MOUNT_DIR=$(realpath "${MOUNT_DIR:-$PWD}")
 
 cd "$(dirname -- "$0")"
 
 # shellcheck source=config.sh
 . ./config.sh
+
+echo "Mount dir: $MOUNT_DIR"
 
 # Default run options
 set -- \

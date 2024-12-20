@@ -1,9 +1,3 @@
-[x] apt install clang (for odin)
-[x] Add default user to the image
-[x] run.sh via docker uses the default user
-[x] run.sh via podman uses the default user
-[ ] build.sh scripts rerun themselves if not in docker. Check via /etc/raylib-devenv file existence
-
 Target                       | Library | C example | Odin example
 -----------------------------|---------|-----------|--------------
 Static (Linux)               | Yes     | Yes       | -
