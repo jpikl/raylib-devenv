@@ -29,4 +29,4 @@ elif [ "$ENGINE" = podman ]; then
     set -- --userns="keep-id:uid=1000,gid=1000" "$@"
 fi
 
-"$DOCKER" run "$@"
+"$ENGINE" run "$@"

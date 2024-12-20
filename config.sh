@@ -7,15 +7,17 @@ IMAGE=raylib-devenv
 VERSION=latest
 TAG=$IMAGE:$VERSION
 
-if [ ! "${DOCKER-}" ]; then
+if [ ! "${ENGINE-}" ]; then
     if [ -x "$(command -v podman)" ]; then
-        DOCKER=podman
+        ENGINE=podman
     elif [ -x "$(command -v docker)" ]; then
-        DOCKER=docker
+        ENGINE=docker
     else
         echo >&2 "Neither podman or docker is installed!"
         exit 1
     fi
 fi
 
-ENGINE=$(basename "$DOCKER")
+echo "Image: $IMAGE"
+echo "Version: $VERSION"
+echo "Engine: $ENGINE"

@@ -6,4 +6,6 @@ cd "$(dirname -- "$0")"
 
 . ./config.sh
 
-"$DOCKER" build --tag "$TAG" .
+echo
+
+"$ENGINE" build --tag "$TAG" .
