@@ -9,6 +9,8 @@ RUN apt-get -y update && \
         # To download files (odin)
         curl \
         ca-certificates \
+        # Linker needed by odin
+        clang \
         # To clone project repos (emsdk, raylib)
         git \
         # To run emsdk
@@ -79,7 +81,7 @@ RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/ra
     make clean && \
     make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED GLFW_LINUX_ENABLE_WAYLAND=TRUE GLFW_LINUX_ENABLE_X11=FALSE && \
     make install PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/linux-wayland-shared && \
-    # Web static
+    # Web
     make clean && \
     bash -c 'source /opt/emsdk/emsdk_env.sh && make PLATFORM=PLATFORM_WEB' && \
     make install PLATFORM=PLATFORM_WEB RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/web && \
