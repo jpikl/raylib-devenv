@@ -2,22 +2,31 @@
 
 set -eu
 
-SCRIPT_DIR=$(dirname -- "$0")
+MOUNT_DIR=$PWD
 
-# shellcheck source=./config.sh
-. "$SCRIPT_DIR/config.sh"
+cd "$(dirname -- "$0")"
 
-# Prepend default `docker run` options
+# shellcheck source=config.sh
+. ./config.sh
+
+# Default run options
 set -- \
     --rm \
-    --volume "$PWD:/mnt" \
+    --volume "$MOUNT_DIR:/mnt" \
     --workdir /mnt \
     "$TAG" \
     "$@"
 
-# Enable interactivity only when run from terminal and not on CI
+# Enable interactivity only when run from terminal and not on CI.
 if [ -t 0 ] && [ -t 1 ] && [ ! "${CI-}" ]; then
     set -- --tty --interactive "$@"
+fi
+
+# Map the current user to the user within the container.
+if [ "$ENGINE" = docker ]; then
+    set -- --user="$(id -u):$(id -g)" "$@"
+elif [ "$ENGINE" = podman ]; then
+    set -- --userns="keep-id:uid=1000,gid=1000" "$@"
 fi
 
 "$DOCKER" run "$@"

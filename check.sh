@@ -2,15 +2,6 @@
 
 set -eu
 
-shellcheck \
-    --check-sourced \
-    --external-sources \
-    build.sh \
-    check.sh \
-    clean.sh \
-    entrypoint.sh \
-    run.sh \
-    test.sh \
-    examples/*/*.sh
+find . -name '*.sh' -print0 | xargs -0 shellcheck --check-sourced --external-sources
 
 printf "\e[32m%s\e[0m\n" "Check OK"
