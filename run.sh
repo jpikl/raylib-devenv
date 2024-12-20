@@ -6,7 +6,6 @@ MOUNT_DIR=$(realpath "${MOUNT_DIR:-$PWD}")
 
 cd "$(dirname -- "$0")"
 
-# shellcheck source=config.sh
 . ./config.sh
 
 echo "Mount dir: $MOUNT_DIR"

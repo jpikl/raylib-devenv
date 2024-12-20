@@ -9,12 +9,17 @@ if [ ! "${INSIDE_RAYLIB_DEVENV-}" ]; then
     MOUNT_DIR=$ROOT_DIR exec "$ROOT_DIR/run.sh" "$SCRIPT_PATH"
 fi
 
+# Execute all commands relative to this script directory
 cd "$(dirname -- "$0")"
+
+# To see what commands are being executed
 set -x
 
+# Clean output directory
 rm -rf out
 mkdir -p out
 
+# Build web app
 emcc main.c \
     -sUSE_GLFW=3 \
     -I/usr/local/include \
