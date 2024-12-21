@@ -1,8 +1,13 @@
 FROM ubuntu:24.10
 
+# This can be used by scripts to detect whether we are in containerized environment or not.
+ENV INSIDE_RAYLIB_DEVENV=1
+
 # =============================================================================
 # System packages
 # =============================================================================
+
+ARG JDK_VERSION=24
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
@@ -11,10 +16,13 @@ RUN apt-get -y update && \
         ca-certificates \
         # Linker needed by odin
         clang \
-        # To clone project repos (emsdk, raylib)
+        # To clone project repos (Emscripten SDK, raylib)
         git \
-        # To run emsdk
+        # To run Emscripten SDK
         python3 \
+        # For Android development
+        openjdk-$JDK_VERSION-jdk-headless \
+        sdkmanager \
         # To build raylib https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux
         build-essential \
         libasound2-dev \
@@ -32,21 +40,6 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/*
 
 # =============================================================================
-# Odin language
-# =============================================================================
-
-ARG ODIN_VERSION=dev-2024-12
-ARG ODIN_ARCHIVE=odin-linux-amd64-$ODIN_VERSION.tar.gz
-ARG ODIN_URL=https://github.com/odin-lang/Odin/releases/download/$ODIN_VERSION/$ODIN_ARCHIVE
-
-RUN mkdir -p /opt/odin && \
-    curl --location --output "/tmp/$ODIN_ARCHIVE" "$ODIN_URL" && \
-    tar xf "/tmp/$ODIN_ARCHIVE" --strip-components=1 --directory=/opt/odin && \
-    rm "/tmp/$ODIN_ARCHIVE"
-
-ENV PATH=$PATH:/opt/odin
-
-# =============================================================================
 # Emscripten SDK
 # =============================================================================
 
@@ -56,6 +49,24 @@ RUN git clone --depth 1 https://github.com/emscripten-core/emsdk.git /opt/emsdk 
     cd /opt/emsdk && \
     ./emsdk install "$EMSDK_VERSION" && \
     ./emsdk activate "$EMSDK_VERSION"
+
+# =============================================================================
+# Android SDK
+# =============================================================================
+
+ARG ANDROID_PLATFORM_VERSION=35
+ARG ANDROID_BUILD_TOOLS_VERSION=35.0.0
+ARG ANDROID_NDK_VERSION=27.2.12479018
+
+RUN sdkmanager --install "platforms;android-$ANDROID_PLATFORM_VERSION" && \
+    sdkmanager --install "build-tools;$ANDROID_BUILD_TOOLS_VERSION" && \
+    sdkmanager --install "ndk;$ANDROID_NDK_VERSION"
+
+ENV ANDROID_SDK_DIR=/opt/android-sdk
+ENV ANDROID_NDK_DIR=/opt/android-sdk/ndk/$ANDROID_NDK_VERSION
+ENV ANDROID_BUILD_TOOLS_DIR=/opt/android-sdk/build-tools/$ANDROID_BUILD_TOOLS_VERSION
+ENV ANDROID_PLATFORM_DIR=/opt/android-sdk/platforms/android-$ANDROID_PLATFORM_VERSION
+ENV ANDROID_PLATFORM_VERSION=$ANDROID_PLATFORM_VERSION
 
 # =============================================================================
 # Raylib
@@ -85,8 +96,39 @@ RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/ra
     make clean && \
     bash -c 'source /opt/emsdk/emsdk_env.sh && make PLATFORM=PLATFORM_WEB' && \
     make install PLATFORM=PLATFORM_WEB RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/web && \
+    # Android armeabi-v7a
+    make clean && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_NDK=$ANDROID_NDK_DIR ANDROID_API_VERSION=$ANDROID_PLATFORM_VERSION ANDROID_ARCH=arm && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/android-armeabi-v7a && \
+    # Android arm64-v8a
+    make clean && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_NDK=$ANDROID_NDK_DIR ANDROID_API_VERSION=$ANDROID_PLATFORM_VERSION ANDROID_ARCH=arm64 && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/android-arm64-v8a && \
+    # Android x86
+    make clean && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_NDK=$ANDROID_NDK_DIR ANDROID_API_VERSION=$ANDROID_PLATFORM_VERSION ANDROID_ARCH=x86 && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/android-x86 && \
+    # Android x86_64
+    make clean && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_NDK=$ANDROID_NDK_DIR ANDROID_API_VERSION=$ANDROID_PLATFORM_VERSION ANDROID_ARCH=x86_64 && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=/usr/local/lib/raylib/android-x86_64 && \
     # Get rid of the cloned repo
     rm -r /tmp/raylib
+
+# =============================================================================
+# Odin language
+# =============================================================================
+
+ARG ODIN_VERSION=dev-2024-12
+ARG ODIN_ARCHIVE=odin-linux-amd64-$ODIN_VERSION.tar.gz
+ARG ODIN_URL=https://github.com/odin-lang/Odin/releases/download/$ODIN_VERSION/$ODIN_ARCHIVE
+
+RUN mkdir -p /opt/odin && \
+    curl --location --output "/tmp/$ODIN_ARCHIVE" "$ODIN_URL" && \
+    tar xf "/tmp/$ODIN_ARCHIVE" --strip-components=1 --directory=/opt/odin && \
+    rm "/tmp/$ODIN_ARCHIVE"
+
+ENV PATH=$PATH:/opt/odin
 
 # =============================================================================
 # Entrypoint
@@ -97,6 +139,3 @@ COPY entrypoint.sh /usr/local/bin/entrypoint
 ENTRYPOINT ["entrypoint"]
 
 CMD ["bash"]
-
-# This can be used by scripts to detect whether we are in containerized environment or not.
-ENV INSIDE_RAYLIB_DEVENV=1

@@ -12,10 +12,13 @@ char textBuffer[255];
 void InitGame() {
     InitWindow(640, 480, "Hello, world!");
     InitAudioDevice();
-    ChangeDirectory(GetApplicationDirectory()); // To load assets relative to the game executable
 
-    logoTexture = LoadTexture("assets/raylib.png");
-    coinSound = LoadSound("assets/coin.wav");
+    // To load assets relative to the game executable
+    ChangeDirectory(GetApplicationDirectory());
+    ChangeDirectory("assets");
+
+    logoTexture = LoadTexture("raylib.png");
+    coinSound = LoadSound("coin.wav");
 }
 
 bool IsGameRunning() {
@@ -29,10 +32,17 @@ bool IsGameRunning() {
     return true;
 }
 
+void QuitGame();
+
 void UpdateGame() {
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsKeyPressed(KEY_SPACE) || IsGestureDetected(GESTURE_TAP))  {
         clickCounter++;
         PlaySound(coinSound);
+    }
+
+    if (clickCounter >= 5) {
+        QuitGame();
+        return;
     }
 
     snprintf(textBuffer, 255, "Click counter: %d", clickCounter);
