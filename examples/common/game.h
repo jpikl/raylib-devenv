@@ -14,8 +14,8 @@ void InitGame() {
     InitAudioDevice();
     ChangeDirectory(GetApplicationDirectory()); // To load assets relative to the game executable
 
-    logoTexture = LoadTexture("raylib.png");
-    coinSound = LoadSound("coin.wav");
+    logoTexture = LoadTexture("assets/raylib.png");
+    coinSound = LoadSound("assets/coin.wav");
 }
 
 bool IsGameRunning() {

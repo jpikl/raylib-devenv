@@ -25,6 +25,6 @@ emcc main.c \
     -I/usr/local/include \
     -L/usr/local/lib/raylib/web \
     -lraylib \
-    --preload-file ../assets@. \
+    --preload-file ../assets \
     --shell-file shell.html \
     -o out/index.html

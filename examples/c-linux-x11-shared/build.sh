@@ -33,4 +33,4 @@ cc main.c \
 
 # Copy assets and shared libraries
 cp -a /usr/local/lib/raylib/linux-x11-shared/*.so* out
-cp ../assets/* out
+cp -r ../assets out
