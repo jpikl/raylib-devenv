@@ -33,4 +33,4 @@ cc main.c \
     -o out/game
 
 # Copy assets
-cp -r ../assets out
+cp -r ../common/assets out
