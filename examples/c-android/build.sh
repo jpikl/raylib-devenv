@@ -129,7 +129,6 @@ d8 \
     --lib "$ANDROID_PLATFORM/android.jar" \
     out/class/com/example/*.class
 
-# TODO --min-sdk-version VAL] [--target-sdk-version VAL] [--app-version VAL] [--app-version-name TEXT]  [--rename-manifest-package PACKAGE] [--error-on-failed-insert]
 # Bundle APK
 aapt package \
     -f \
@@ -138,6 +137,11 @@ aapt package \
     -A ../common/assets \
     -I "$ANDROID_PLATFORM/android.jar" \
     -F out/apk/game.unaligned.apk \
+    --min-sdk-version 29 \
+    --target-sdk-version "$ANDROID_API_VERSION" \
+    --version-code 1 \
+    --version-name 1.0 \
+    --error-on-failed-insert \
     out/dex
 
 # Add libraries to APK
