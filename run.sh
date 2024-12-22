@@ -15,6 +15,7 @@ set -- \
     --rm \
     --volume "$MOUNT_DIR:/mnt" \
     --workdir /mnt \
+    --publish 8080:8080 \
     "$TAG" \
     "$@"
 
@@ -28,6 +29,11 @@ if [ "$ENGINE" = docker ]; then
     set -- --user="$(id -u):$(id -g)" "$@"
 elif [ "$ENGINE" = podman ]; then
     set -- --userns="keep-id:uid=1000,gid=1000" "$@"
+fi
+
+# For Android ADB to be able to access USB devices
+if [ -d /dev/bus/usb ]; then
+    set -- --volume /dev/bus/usb/:/dev/bus/usb "$@"
 fi
 
 "$ENGINE" run "$@"

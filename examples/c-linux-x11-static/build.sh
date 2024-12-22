@@ -22,7 +22,7 @@ mkdir -p out
 # Build executable
 cc main.c \
     -I/usr/local/include \
-    -L/usr/local/lib/raylib/linux-x11-static \
+    -L"$RAYLIB_LIB_PATH/linux-x11-static" \
     -lraylib \
     -lGL \
     -lm \

@@ -21,7 +21,7 @@ mkdir -p out
 
 # Build executable
 cc main.c \
-    -L/usr/local/lib/raylib/linux-wayland-static \
+    -L"$RAYLIB_LIB_PATH/linux-wayland-static" \
     -lraylib \
     -lGL \
     -lm \

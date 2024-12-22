@@ -22,8 +22,8 @@ mkdir -p out
 # Build web app
 emcc main.c \
     -sUSE_GLFW=3 \
-    -I/usr/local/include \
-    -L/usr/local/lib/raylib/web \
+    -I"$RAYLIB_INCLUDE_PATH" \
+    -L"$RAYLIB_LIB_PATH/web" \
     -lraylib \
     --preload-file ../common/assets@assets \
     --shell-file shell.html \

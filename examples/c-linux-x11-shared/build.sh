@@ -21,7 +21,7 @@ mkdir -p out
 
 # Build executable
 cc main.c \
-    -L/usr/local/lib/raylib/linux-x11-shared \
+    -L"$RAYLIB_LIB_PATH/linux-x11-shared" \
     -lraylib \
     -lGL \
     -lm \
@@ -32,5 +32,5 @@ cc main.c \
     -o out/game
 
 # Copy assets and shared libraries
-cp -a /usr/local/lib/raylib/linux-x11-shared/*.so* out
+cp -a "$RAYLIB_LIB_PATH"/linux-x11-shared/*.so* out
 cp -r ../common/assets out

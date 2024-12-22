@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck disable=SC1091
-source /opt/emsdk/emsdk_env.sh &>/dev/null
+source "$EMSDK_HOME/emsdk_env.sh" &>/dev/null
 
 # Print debugging info
 printf "Working dir: %s\n" "$PWD"
