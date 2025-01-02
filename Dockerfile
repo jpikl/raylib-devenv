@@ -16,6 +16,8 @@ RUN apt-get -y update && \
         # To download files (Odin)
         curl \
         ca-certificates \
+        # To extract files (Raylib for Windows)
+        unzip \
         # Linker needed by Odin
         clang \
         # To clone project repos (Emscripten, Raylib)
@@ -37,6 +39,9 @@ RUN apt-get -y update && \
         libxinerama-dev \
         libwayland-dev \
         libxkbcommon-dev \
+        # For cross compiling to Windows
+        mingw-w64 \
+        gcc-mingw-w64 \
         && \
     # Clean apt cache to reduce image size
     rm -rf /var/lib/apt/lists/*
@@ -127,6 +132,22 @@ RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/ra
     make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$RAYLIB_LIB_PATH/android-x86_64 && \
     # Get rid of the cloned repo
     rm -r /tmp/raylib
+
+ARG RAYLIB_WIN64_ARCHIVE=raylib-${RAYLIB_VERSION}_win64_mingw-w64.zip
+ARG RAYLIB_WIN64_URL=https://github.com/raysan5/raylib/releases/download/$RAYLIB_VERSION/$RAYLIB_WIN64_ARCHIVE
+
+# Raylib makefile does not support Linux to Windows cross compilation, so we just download pre-built files.
+RUN curl --location --output "/tmp/$RAYLIB_WIN64_ARCHIVE" "$RAYLIB_WIN64_URL" && \
+    # Windows 64 static
+    mkdir -p "$RAYLIB_LIB_PATH/win64-static" && \
+    unzip -j "/tmp/$RAYLIB_WIN64_ARCHIVE" '*/libraylib.a' -d "$RAYLIB_LIB_PATH/win64-static" && \
+    # Windows 64 shared
+    mkdir -p "$RAYLIB_LIB_PATH/win64-shared" && \
+    unzip -j "/tmp/$RAYLIB_WIN64_ARCHIVE" '*/libraylibdll.a' -d "$RAYLIB_LIB_PATH/win64-shared" && \
+    unzip -j "/tmp/$RAYLIB_WIN64_ARCHIVE" '*/*.dll' -d "$RAYLIB_LIB_PATH/win64-shared" && \
+    mv "$RAYLIB_LIB_PATH/win64-shared/libraylibdll.a" "$RAYLIB_LIB_PATH/win64-shared/libraylib.a" && \
+    # Clean up downloaded files
+    rm "/tmp/$RAYLIB_WIN64_ARCHIVE"
 
 # =============================================================================
 # Odin language

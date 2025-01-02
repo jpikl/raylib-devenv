@@ -2,13 +2,7 @@ Target                       | Library | C example | Odin example
 -----------------------------|---------|-----------|--------------
 Static (Linux)               | Yes     | Yes       | -
 Shared (Linux)               | Yes     | Yes       | -
-Static (Win64 cross compile) | -       | -         | -
-Shared (Win64 cross compile) | -       | -         | -
+Static (Win64 cross compile) | Yes     | Yes       | -
+Shared (Win64 cross compile) | Yes     | Yes       | -
 Web                          | Yes     | Yes       | -
-Android                      | -       | -         | -
-
-Feature  | Desktop | Web | Android
----------|---------|-----|---------
-Textures | Yes     | Yes | -
-Audio    | Yes     | Yes | -
-Input    | Yes     | Yes | -
+Android                      | Yes     | Yes       | -

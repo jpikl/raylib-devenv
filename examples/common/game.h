@@ -29,6 +29,9 @@ bool IsGameRunning() {
     if (WindowShouldClose()) {
         return false;
     }
+    if (clickCounter >= 5) {
+        return false;
+    }
     return true;
 }
 
@@ -38,11 +41,6 @@ void UpdateGame() {
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsKeyPressed(KEY_SPACE) || IsGestureDetected(GESTURE_TAP))  {
         clickCounter++;
         PlaySound(coinSound);
-    }
-
-    if (clickCounter >= 5) {
-        QuitGame();
-        return;
     }
 
     snprintf(textBuffer, 255, "Click counter: %d", clickCounter);
