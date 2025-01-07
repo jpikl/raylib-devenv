@@ -28,25 +28,22 @@ init :: proc() -> bool {
     return true
 }
 
-is_running :: proc() -> bool {
+update :: proc() -> bool {
     if os.get_env("TEST") != "" {
         return false // Early quit when running test suite
     }
+
     if (rl.WindowShouldClose()) {
         return false
     }
-    if (clickCounter >= 5) {
-        return false
-    }
-    return true
-}
 
-update :: proc() {
-    if (rl.IsMouseButtonPressed(rl.MouseButton.LEFT) ||
-           rl.IsKeyPressed(rl.KeyboardKey.SPACE) ||
-           rl.IsGestureDetected(rl.Gesture.TAP)) {
-        clickCounter += 1
+    if (rl.IsMouseButtonPressed(.LEFT) || rl.IsKeyPressed(.SPACE) || rl.IsGestureDetected(.TAP)) {
         rl.PlaySound(coinSound)
+        clickCounter += 1
+
+        if (clickCounter >= 5) {
+            return false
+        }
     }
 
     rl.BeginDrawing()
@@ -55,7 +52,7 @@ update :: proc() {
     rl.DrawText(fmt.ctprintf("Click counter: %d", clickCounter), 230, 200, 20, rl.DARKGRAY)
     rl.EndDrawing()
 
-    free_all(context.temp_allocator)
+    return true
 }
 
 quit :: proc() {

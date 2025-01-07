@@ -3,16 +3,16 @@ include base.mk
 PLATFORM_BINARY = $(PLATFORM_OUT_DIR)/$(GAME_CODE)
 PLATFORM_ZIP = $(PLATFORM_OUT_DIR)/$(GAME_CODE)-$(GAME_VERSION).zip
 
-# Build game binary
+# Build binary
 $(PLATFORM_BINARY): $(PLATFORM_DOCKER_TARGET) $(ODIN_SOURCES)
 	mkdir -p $(PLATFORM_OUT_DIR)
-	$(DOCKER_RUN) $(ODIN) build $(SRC_DIR) $(ODIN_FLAGS) -out:$@
+	$(DOCKER_RUN) $(ODIN) build $(SRC_DIR) $(ODIN_FLAGS) -out:$(PLATFORM_BINARY)
 
-# Build game zip
+# Build zip
 $(PLATFORM_ZIP): $(PLATFORM_BINARY) $(PLATFORM_ASSETS_DIR) $(ASSETS_FILES)
 	cd $(PLATFORM_OUT_DIR) && zip -r $(notdir $(PLATFORM_ZIP)) $(notdir $(PLATFORM_BINARY)) $(notdir $(PLATFORM_ASSETS_DIR))
 
-# Run game binary
+# Run binary
 run: $(PLATFORM_BINARY) $(PLATFORM_ASSETS_DIR)
 	cd $(PLATFORM_OUT_DIR) && ./$(notdir $(PLATFORM_BINARY))
 
