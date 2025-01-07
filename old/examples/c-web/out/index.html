@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello, world!</title>
+    <style>
+        body { display: grid; place-items: center; height: 100vh; margin: 0; }
+        canvas { border: 1px solid black; }
+    </style>
+    </head>
+    <body>
+        <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+        <script>
+            window.Module = {
+                canvas: document.getElementById('canvas'),
+                print: text => console.log(text),
+            };
+        </script>
+        <script async type="text/javascript" src="index.js"></script>
+    </body>
+</html>
