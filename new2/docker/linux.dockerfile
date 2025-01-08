@@ -31,3 +31,11 @@ RUN mkdir -p "$ODIN_ROOT" && \
     rm "/tmp/$ODIN_ARCHIVE"
 
 ENV PATH=$PATH:$ODIN_ROOT
+
+# Patch Raylib bindings
+# TODO: Remove after the next Odin release
+
+RUN git clone --depth 1 https://github.com/odin-lang/Odin.git /tmp/odin && \
+    rm -rf "$ODIN_ROOT/vendor/raylib" && \
+    mv /tmp/odin/vendor/raylib "$ODIN_ROOT/vendor/raylib" && \
+    rm -rf /tmp/odin

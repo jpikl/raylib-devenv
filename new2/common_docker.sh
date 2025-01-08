@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 
-DOCKER_IMAGE=${DOCKER_IMAGE:-"$APP_CODE-devenv"}
+DOCKER_IMAGE=${DOCKER_IMAGE:-"$APP_CODE-build-env"}
 
 if [ ! "${DOCKER-}" ]; then
     if [ -x "$(command -v podman)" ]; then
