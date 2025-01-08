@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPTS_DIR=$(dirname "$0")
+PROJECT_DIR=$PWD
+PLATFORM=$1
+shift
+
+source $SCRIPTS_DIR/common.sh
+source $SCRIPTS_DIR/common_docker.sh
+
+DOCKER_RUN_FLAGS=(
+    --rm
+    --volume "$PROJECT_DIR:/mnt/project"
+    --volume "$SCRIPTS_DIR:/mnt/scripts"
+    --workdir /mnt/project
+    --env "DEBUG=${DEBUG-}"
+)
+
+if [[ $DOCKER == docker ]]; then
+    DOCKER_RUN_FLAGS+=(--user="$(id -u):$(id -g)")
+fi
+
+"$DOCKER" run "${DOCKER_RUN_FLAGS[@]}" "$DOCKER_IMAGE:$PLATFORM" "$@"

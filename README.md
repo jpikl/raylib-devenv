@@ -1,3 +1,3 @@
-# Raylib Development Environment
+# Raylib Odin Scripts
 
 Work in progress...
