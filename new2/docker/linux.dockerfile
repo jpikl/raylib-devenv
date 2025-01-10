@@ -19,23 +19,17 @@ RUN apt-get -y update && \
 # Odin language
 # =============================================================================
 
-ARG ODIN_VERSION=dev-2024-12
-ARG ODIN_ARCHIVE=odin-linux-amd64-$ODIN_VERSION.tar.gz
+ARG ODIN_VERSION=dev-2025-01
+ARG ODIN_ARCHIVE=odin-ubuntu-amd64-$ODIN_VERSION.zip
 ARG ODIN_URL=https://github.com/odin-lang/Odin/releases/download/$ODIN_VERSION/$ODIN_ARCHIVE
 
 ENV ODIN_ROOT=/opt/odin
 
 RUN mkdir -p "$ODIN_ROOT" && \
-    curl --location --output "/tmp/$ODIN_ARCHIVE" "$ODIN_URL" && \
-    tar xf "/tmp/$ODIN_ARCHIVE" --strip-components=1 --directory="$ODIN_ROOT" && \
-    rm "/tmp/$ODIN_ARCHIVE"
+    curl --location --fail --output "/tmp/$ODIN_ARCHIVE" "$ODIN_URL" && \
+    # Probably due to some packaging issue, the zip file does not include files directly but has intermediate `dist.tar.gz` in it.
+    unzip "/tmp/$ODIN_ARCHIVE" -d /tmp && \
+    tar xf /tmp/dist.tar.gz --strip-components=1 --directory="$ODIN_ROOT" && \
+    rm "/tmp/$ODIN_ARCHIVE" /tmp/dist.tar.gz
 
 ENV PATH=$PATH:$ODIN_ROOT
-
-# Patch Raylib bindings
-# TODO: Remove after the next Odin release
-
-RUN git clone --depth 1 https://github.com/odin-lang/Odin.git /tmp/odin && \
-    rm -rf "$ODIN_ROOT/vendor/raylib" && \
-    mv /tmp/odin/vendor/raylib "$ODIN_ROOT/vendor/raylib" && \
-    rm -rf /tmp/odin
