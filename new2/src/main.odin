@@ -3,16 +3,13 @@ package main
 import fmt "core:fmt"
 import rl "vendor:raylib"
 import app "extras:app"
-import "core:c"
 
 logoTexture: rl.Texture2D
 coinSound: rl.Sound
 clickCounter := 0
 
-@(export)
-main :: proc "c" () -> c.int {
+main :: proc () {
     app.run(init, update, quit)
-    return 0
 }
 
 init :: proc() -> bool {
