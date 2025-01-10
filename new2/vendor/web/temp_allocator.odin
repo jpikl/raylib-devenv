@@ -5,7 +5,7 @@ web). It just forwards everything to the arena in `base:runtime`. That arena is
 actually a growing arena made just for the temp allocator.
 */
 
-package main_web
+package web
 
 import "base:runtime"
 

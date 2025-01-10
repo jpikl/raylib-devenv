@@ -38,7 +38,7 @@ EMCC_FLAGS=(
     -L"$ODIN_ROOT/vendor/raylib/wasm"
     -lraylib
     -lraygui
-    --preload-file "$ASSETS_DIR@$ASSETS_DIRNAME"
+    --preload-file "$ASSETS_DIR"
 )
 
 if [[ ${DEBUG-} = 1 || ${DEBUG-} == true ]]; then
