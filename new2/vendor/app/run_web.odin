@@ -5,47 +5,36 @@ import "base:runtime"
 import "core:mem"
 import web "../web"
 
-init_ref: InitProc
-update_ref: UpdateProc
-
+@(private)
 web_context: runtime.Context
 
+@(private)
 @(thread_local)
 temp_allocator: web.Default_Temp_Allocator
 
-run :: proc "c" (init: InitProc, update: UpdateProc, _quit: QuitProc) {
-    init_ref = init
-    update_ref = update
+@(private)
+update_ref : UpdateProc
 
-    web_context_init()
-    web_init()
-
-    web.emscripten_set_main_loop(web_update, 0, true)
-}
-
-@export
-web_context_init :: proc "c" () {
+web_run :: proc "c" (init: InitProc, update: UpdateProc) {
     web_context = runtime.default_context()
-	web_context.allocator = web.emscripten_allocator()
+    web_context.allocator = web.emscripten_allocator()
 
     context = web_context
 
-	web.default_temp_allocator_init(&temp_allocator, mem.Megabyte)
-	web_context.temp_allocator = web.default_temp_allocator(&temp_allocator)
-	web_context.logger = web.create_emscripten_logger()
+    web.default_temp_allocator_init(&temp_allocator, mem.Megabyte)
+    web_context.temp_allocator = web.default_temp_allocator(&temp_allocator)
+    web_context.logger = web.create_emscripten_logger()
+
+    if init() {
+        free_all(context.temp_allocator)
+        update_ref = update
+        web.emscripten_set_main_loop(web_update, 0, true)
+    }
 }
 
-import log "core:log"
-
-@export
-web_init :: proc "c" () {
-    context = web_context
-    log.info("helllllo")
-	init_ref()
-}
-
-@export
+@(private)
 web_update :: proc "c" () {
-	context = web_context
-	update_ref()
+    context = web_context
+    update_ref()
+    free_all(context.temp_allocator)
 }

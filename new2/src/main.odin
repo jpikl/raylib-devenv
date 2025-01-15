@@ -2,14 +2,21 @@ package main
 
 import fmt "core:fmt"
 import rl "vendor:raylib"
-import app "extras:app"
+import app "build:app"
 
 logoTexture: rl.Texture2D
 coinSound: rl.Sound
 clickCounter := 0
 
-main :: proc () {
-    app.run(init, update, quit)
+when ODIN_ARCH == .wasm32 {
+    @(export)
+    web_main :: proc "c" () {
+        app.web_run(init, update)
+    }
+} else {
+    main :: proc () {
+        app.run(init, update, quit)
+    }
 }
 
 init :: proc() -> bool {
@@ -29,15 +36,14 @@ init :: proc() -> bool {
 }
 
 update :: proc() -> bool {
-    if (rl.WindowShouldClose()) {
+    if rl.WindowShouldClose() {
         return false
     }
 
-    if (rl.IsMouseButtonPressed(.LEFT) || rl.IsKeyPressed(.SPACE) || rl.IsGestureDetected(.TAP)) {
+    if rl.IsMouseButtonPressed(.LEFT) || rl.IsKeyPressed(.SPACE) || rl.IsGestureDetected(.TAP) {
         rl.PlaySound(coinSound)
         clickCounter += 1
-
-        if (clickCounter >= 5) {
+        if clickCounter > 5 {
             return false
         }
     }

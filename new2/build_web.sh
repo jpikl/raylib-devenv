@@ -21,20 +21,20 @@ ODIN_FLAGS+=(
     # We have to do it this way because the emscripten compiler (emcc) needs to be fed the precompiled raylib library file.
     # That stuff will end up in env.o, which our Odin code is instructed to link to.
 
-    -define:RAYLIB_WASM_LIB=env.o
-    -define:RAYGUI_WASM_LIB=env.o
+   -define:RAYLIB_WASM_LIB=env.o
+   -define:RAYGUI_WASM_LIB=env.o
 )
 
 odin build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
-    "$WEB_OUT_DIR/$APP_CODE.wasm.o"
-    "$ODIN_ROOT/vendor/raylib/wasm/libraylib.a"
-    "$ODIN_ROOT/vendor/raylib/wasm/libraygui.a"
+   "$(dirname "$0")/web/main.c"
+   "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 )
 
 EMCC_FLAGS=(
     -sUSE_GLFW=3
+    -sASYNCIFY
     -L"$ODIN_ROOT/vendor/raylib/wasm"
     -lraylib
     -lraygui
@@ -50,3 +50,7 @@ fi
 emcc "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
 
 rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
+
+if [[ "${1-}" == -r ]]; then
+    "$(dirname "$0")/run_web.sh"
+fi
