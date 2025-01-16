@@ -10,7 +10,8 @@ ODIN_FLAGS=(
     -define:APP_CODE="${APP_CODE}"
     -define:APP_NAME="${APP_NAME}"
     -define:APP_VERSION="${APP_VERSION}"
-    -collection:build="$(dirname "$0")/vendor"
+    -define:ASSETS_DIR="${ASSETS_DIR}"
+    -collection:helpers="$(dirname "$0")/helpers"
 )
 
 if [[ ${DEBUG-} = 1 || ${DEBUG-} = true ]]; then

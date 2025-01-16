@@ -11,6 +11,4 @@ APP_VERSION=${APP_VERSION:-"1.0.0"}
 
 SRC_DIR=${SRC_DIR:-"src"}
 OUT_DIR=${OUT_DIR:-"out"}
-
 ASSETS_DIR=${ASSETS_DIR:-"assets"}
-ASSETS_DIRNAME=$(basename "$ASSETS_DIR")

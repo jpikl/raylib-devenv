@@ -1,3 +1,5 @@
+// Source: https://github.com/karl-zylinski/odin-raylib-web/blob/main/source/main_web/temp_allocator.odin
+
 /*
 This is more or less a copy of `Default_Temp_Allocator` in base:runtime (that
 one is disabled in freestanding build mode, which is the build mode used by for

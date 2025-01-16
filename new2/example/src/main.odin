@@ -1,14 +1,15 @@
 package main
 
-import fmt "core:fmt"
+import "core:fmt"
+import "core:log"
+import "helpers:app"
 import rl "vendor:raylib"
-import app "build:app"
 
 logoTexture: rl.Texture2D
 coinSound: rl.Sound
 clickCounter := 0
 
-when ODIN_ARCH == .wasm32 {
+when app.IS_WEB {
     @(export)
     web_main :: proc "c" () {
         app.web_run(init, update)
@@ -20,6 +21,8 @@ when ODIN_ARCH == .wasm32 {
 }
 
 init :: proc() -> bool {
+    log.info("Init started")
+
     rl.InitWindow(640, 480, fmt.ctprintf("%s (%s)", app.NAME, app.VERSION))
     rl.InitAudioDevice()
 
@@ -32,6 +35,7 @@ init :: proc() -> bool {
     rl.IsTextureValid(logoTexture) or_return
     rl.IsSoundValid(coinSound) or_return
 
+    log.info("Init done")
     return true
 }
 

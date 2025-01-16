@@ -1,3 +1,5 @@
+// Source: https://github.com/karl-zylinski/odin-raylib-web/blob/main/source/main_web/emscripten_logger.odin
+
 /*
 This logger is largely a copy of the console logger in `core:log`, but it uses
 emscripten's `puts` proc to write into he console of the web browser.

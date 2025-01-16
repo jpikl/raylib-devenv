@@ -1,3 +1,5 @@
+// Source" https://github.com/karl-zylinski/odin-raylib-web/blob/main/source/main_web/emscripten_allocator.odin
+
 /*
 This allocator uses the malloc, calloc, free and realloc procs that emscripten
 exposes in order to allocate memory. Just like Odin's default heap allocator
