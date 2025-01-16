@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
 source "$(dirname "$0")/common.sh"
 source "$(dirname "$0")/common_web.sh"

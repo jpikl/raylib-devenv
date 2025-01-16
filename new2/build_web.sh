@@ -6,10 +6,10 @@ source "$(dirname "$0")/common.sh"
 source "$(dirname "$0")/common_web.sh"
 source "$(dirname "$0")/common_odin.sh"
 
-rm -rf "$WEB_OUT_DIR"
-mkdir -p "$WEB_OUT_DIR"
+run rm -rf "$WEB_OUT_DIR"
+run mkdir -p "$WEB_OUT_DIR"
 
-source "$EMSDK_HOME/emsdk_env.sh"
+run source "$EMSDK_HOME/emsdk_env.sh"
 
 ODIN_FLAGS+=(
     -target:freestanding_wasm32
@@ -26,7 +26,7 @@ ODIN_FLAGS+=(
    -define:RAYGUI_WASM_LIB=env.o
 )
 
-odin build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
+run odin build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
    "$(dirname "$0")/web/main.c"
@@ -52,9 +52,9 @@ if [[ -v EMCC_EXTRA_FLAGS[@] ]]; then
     EMCC_FLAGS+=("${EMCC_EXTRA_FLAGS[@]}")
 fi
 
-emcc "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
+run emcc "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
 
-rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
+run rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 
 if [[ "${1-}" == -r ]]; then
     "$(dirname "$0")/run_web.sh"
