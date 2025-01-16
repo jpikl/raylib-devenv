@@ -19,3 +19,7 @@ if [[ ${DEBUG-} = 1 || ${DEBUG-} = true ]]; then
 else
     ODIN_FLAGS+=(-o:speed)
 fi
+
+if [[ -v ODIN_EXTRA_FLAGS[@] ]]; then
+    ODIN_FLAGS+=("${ODIN_EXTRA_FLAGS[@]}")
+fi

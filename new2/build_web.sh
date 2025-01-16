@@ -14,6 +14,7 @@ source "$EMSDK_HOME/emsdk_env.sh"
 ODIN_FLAGS+=(
     -target:freestanding_wasm32
     -build-mode:obj
+    -define:TEMP_ALLOCATOR_SIZE="$WEB_TEMP_ALLOCATOR_SIZE"
 
     # This env.o thing is the object file that contains things linked into the WASM binary.
     # You can see how RAYLIB_WASM_LIB is used inside <odin>/vendor/raylib/raylib.odin.
@@ -45,6 +46,10 @@ if [[ ${DEBUG-} = 1 || ${DEBUG-} == true ]]; then
     : # Use the default shell in debug mode
 else
     EMCC_FLAGS+=(--shell-file "$WEB_SHELL")
+fi
+
+if [[ -v EMCC_EXTRA_FLAGS[@] ]]; then
+    EMCC_FLAGS+=("${EMCC_EXTRA_FLAGS[@]}")
 fi
 
 emcc "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"

@@ -5,7 +5,7 @@ package web
 import "base:runtime"
 import "core:mem"
 
-TEMP_ALLOCATOR_CAPACITY :: #config(TEMP_ALLOCATOR_CAPACITY, mem.Megabyte)
+TEMP_ALLOCATOR_SIZE :: #config(TEMP_ALLOCATOR_SIZE, mem.Megabyte)
 
 @(private)
 @(thread_local)
@@ -15,7 +15,7 @@ create_context :: proc "c" () -> runtime.Context {
     context = runtime.default_context()
 	context.allocator = emscripten_allocator()
 
-	default_temp_allocator_init(&temp_allocator, TEMP_ALLOCATOR_CAPACITY)
+	default_temp_allocator_init(&temp_allocator, TEMP_ALLOCATOR_SIZE)
 
 	context.temp_allocator = default_temp_allocator(&temp_allocator)
 	context.logger = create_emscripten_logger()
