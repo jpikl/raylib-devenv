@@ -8,7 +8,6 @@ if [ ! "${DOCKER-}" ]; then
     elif [ -x "$(command -v docker)" ]; then
         DOCKER=docker
     else
-        echo >&2 "$0: neither podman or docker is installed"
-        exit 1
+        die "Neither podman or docker is installed"
     fi
 fi

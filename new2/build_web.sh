@@ -9,7 +9,27 @@ source "$(dirname "$0")/common_odin.sh"
 run rm -rf "$WEB_OUT_DIR"
 run mkdir -p "$WEB_OUT_DIR"
 
-run source "$EMSDK_HOME/emsdk_env.sh"
+EMCC=${EMCC-}
+EMSDK_HOME=${EMSDK_HOME-}
+
+if [[ "$EMCC" && ! -x "$EMCC" ]]; then
+    die "EMCC='$EMCC' is not executable"
+fi
+
+if [[ "$EMSDK_HOME" && ! -d "$EMSDK_HOME" ]]; then
+    die "EMSDK_HOME='$EMSDK_HOME' is not a directory"
+fi
+
+if [[ ! "$EMCC" ]]; then
+    if [[ "$EMSDK_HOME" ]]; then
+        run source "$EMSDK_HOME/emsdk_env.sh"
+    fi
+    if [[ -x "$(command -v emcc)" ]]; then
+        EMCC=emcc
+    else
+        die "Could not find emcc binary"
+    fi
+fi
 
 ODIN_FLAGS+=(
     -target:freestanding_wasm32
@@ -26,7 +46,7 @@ ODIN_FLAGS+=(
    -define:RAYGUI_WASM_LIB=env.o
 )
 
-run odin build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
+run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
    "$(dirname "$0")/web/main.c"
@@ -52,7 +72,7 @@ if [[ -v EMCC_EXTRA_FLAGS[@] ]]; then
     EMCC_FLAGS+=("${EMCC_EXTRA_FLAGS[@]}")
 fi
 
-run emcc "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
+run "$EMCC" "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
 
 run rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 

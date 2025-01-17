@@ -11,7 +11,7 @@ run mkdir -p "$LINUX_OUT_DIR"
 
 ODIN_FLAGS+=(-target:linux_amd64)
 
-run odin build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$LINUX_OUT_DIR/$LINUX_BINARY"
+run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$LINUX_OUT_DIR/$LINUX_BINARY"
 
 run cp -r "$ASSETS_DIR" "$LINUX_OUT_DIR/$ASSETS_DIR"
 

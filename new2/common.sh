@@ -22,3 +22,10 @@ run() {
     printf "\033[0m\n"
     "$@"
 }
+
+die() {
+    printf "\033[1;31m"
+    echo >&2 "$@"
+    printf "\033[0m"
+    exit 1
+}

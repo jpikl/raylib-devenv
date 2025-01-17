@@ -1,7 +1,28 @@
 # shellcheck shell=bash
 
-if [[ ! "${ODIN_ROOT-}" ]]; then
-    ODIN_ROOT=$(dirname "$(command -v odin)")
+ODIN=${ODIN-}
+ODIN_ROOT=${ODIN_ROOT-}
+
+if [[ "$ODIN" && ! -x "$ODIN" ]]; then
+    die "ODIN='$ODIN' is not executable"
+fi
+
+if [[ "$ODIN_ROOT" && ! -d "$ODIN_ROOT" ]]; then
+    die "ODIN_ROOT='$ODIN_ROOT' is not a directory"
+fi
+
+if [[ ! "$ODIN" ]]; then
+    if [[ "$ODIN_ROOT" && -x "$ODIN_ROOT/odin" ]]; then
+        ODIN=$ODIN_ROOT/odin
+    elif [[ -x "$(command -v odin)" ]]; then
+        ODIN=odin
+    else
+        die "Could not find odin binary"
+    fi
+fi
+
+if [[ ! "$ODIN_ROOT" ]]; then
+    ODIN_ROOT=$(dirname "$(command -v "$ODIN")")
 fi
 
 ODIN_FLAGS=(
