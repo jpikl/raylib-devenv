@@ -11,10 +11,10 @@ if [[ "${ODIN_ROOT:=}" && ! -d "$ODIN_ROOT" ]]; then
 fi
 
 if [[ ! "$ODIN" ]]; then
-    if [[ "$ODIN_ROOT" && -x "$ODIN_ROOT/odin" ]]; then
-        ODIN=$ODIN_ROOT/odin
-    elif [[ -x "$(command -v odin)" ]]; then
+    if [[ -x "$(command -v odin)" ]]; then
         ODIN=odin
+    elif [[ "$ODIN_ROOT" && -x "$ODIN_ROOT/odin" ]]; then
+        ODIN=$ODIN_ROOT/odin
     else
         die "Could not find odin binary"
     fi
@@ -43,3 +43,7 @@ fi
 if [[ -v ODIN_EXTRA_FLAGS[@] ]]; then
     ODIN_FLAGS+=("${ODIN_EXTRA_FLAGS[@]}")
 fi
+
+print_odin_vars() {
+    print_var ODIN
+}

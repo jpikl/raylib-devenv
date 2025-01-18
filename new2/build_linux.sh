@@ -5,8 +5,14 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_linux.sh"
 source "$ROOT_DIR/common_odin.sh"
+
+print_common_vars
+print_build_vars
+print_linux_vars
+print_odin_vars
 
 run_step rm -rf "$LINUX_OUT_DIR"
 run_step mkdir -p "$LINUX_OUT_DIR"

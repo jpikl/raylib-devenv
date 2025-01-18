@@ -5,8 +5,14 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_web.sh"
 source "$ROOT_DIR/common_odin.sh"
+
+print_common_vars
+print_build_vars
+print_web_vars
+print_odin_vars
 
 if [[ "${EMCC:=}" && ! -x "$EMCC" ]]; then
     die "EMCC='$EMCC' is not executable"

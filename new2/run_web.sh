@@ -5,6 +5,7 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_web.sh"
 
 URL=http://127.0.0.1:8000
@@ -18,7 +19,7 @@ if [ -x "$(command -v python)" ]; then
         echo "    $URL"
         echo
     fi
-    python -m http.server -d "$WEB_OUT_DIR"
+    python -m http.server -b 0.0.0.0 -d "$WEB_OUT_DIR"
 else
     echo >&2 "Could not start python http server!"
     echo >&2

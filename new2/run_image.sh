@@ -8,7 +8,10 @@ PLATFORM=$1
 shift
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_docker.sh"
+
+print_docker_vars
 
 DOCKER_RUN_FLAGS=(
     --rm

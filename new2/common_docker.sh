@@ -18,3 +18,9 @@ fi
 
 # shellcheck disable=SC2034
 DOCKER_TYPE=$(basename "$DOCKER")
+
+print_docker_vars() {
+    print_var DOCKER
+    print_var DOCKER_TYPE
+    print_var DOCKER_IMAGE
+}
