@@ -8,23 +8,17 @@ source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/common_web.sh"
 source "$ROOT_DIR/common_odin.sh"
 
-run rm -rf "$WEB_OUT_DIR"
-run mkdir -p "$WEB_OUT_DIR"
-
-EMCC=${EMCC-}
-EMSDK_HOME=${EMSDK_HOME-}
-
-if [[ "$EMCC" && ! -x "$EMCC" ]]; then
+if [[ "${EMCC:=}" && ! -x "$EMCC" ]]; then
     die "EMCC='$EMCC' is not executable"
 fi
 
-if [[ "$EMSDK_HOME" && ! -d "$EMSDK_HOME" ]]; then
+if [[ "${EMSDK_HOME:=}" && ! -d "$EMSDK_HOME" ]]; then
     die "EMSDK_HOME='$EMSDK_HOME' is not a directory"
 fi
 
 if [[ ! "$EMCC" ]]; then
     if [[ "$EMSDK_HOME" ]]; then
-        run source "$EMSDK_HOME/emsdk_env.sh"
+        run_step source "$EMSDK_HOME/emsdk_env.sh"
     fi
     if [[ -x "$(command -v emcc)" ]]; then
         EMCC=emcc
@@ -32,6 +26,9 @@ if [[ ! "$EMCC" ]]; then
         die "Could not find emcc binary"
     fi
 fi
+
+run_step rm -rf "$WEB_OUT_DIR"
+run_step mkdir -p "$WEB_OUT_DIR"
 
 ODIN_FLAGS+=(
     -target:freestanding_wasm32
@@ -48,7 +45,7 @@ ODIN_FLAGS+=(
    -define:RAYGUI_WASM_LIB=env.o
 )
 
-run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
+run_step "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
    "$ROOT_DIR/web/main.c"
@@ -61,10 +58,15 @@ EMCC_FLAGS=(
     -L"$ODIN_ROOT/vendor/raylib/wasm"
     -lraylib
     -lraygui
-    --preload-file "$ASSETS_DIR"
 )
 
-if [[ ${DEBUG-} = 1 || ${DEBUG-} == true ]]; then
+if [[ -d "$ASSETS_DIR" ]]; then
+    EMCC_FLAGS+=(--preload-file "$ASSETS_DIR")
+else
+    warn "No ASSETS_DIR='$ASSETS_DIR' to bundle"
+fi
+
+if [[ $DEBUG ]]; then
     : # Use the default shell in debug mode
 else
     EMCC_FLAGS+=(--shell-file "$WEB_SHELL")
@@ -74,9 +76,9 @@ if [[ -v EMCC_EXTRA_FLAGS[@] ]]; then
     EMCC_FLAGS+=("${EMCC_EXTRA_FLAGS[@]}")
 fi
 
-run "$EMCC" "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
+run_step "$EMCC" "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
 
-run rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
+run_step rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 
 if [[ "${1-}" == -r ]]; then
     "$ROOT_DIR/run_web.sh"

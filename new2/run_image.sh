@@ -15,10 +15,10 @@ DOCKER_RUN_FLAGS=(
     --volume "$PROJECT_DIR:/mnt/project"
     --volume "$ROOT_DIR:/mnt/scripts"
     --workdir /mnt/project
-    --env "DEBUG=${DEBUG-}"
+    --env "DEBUG=$DEBUG"
 )
 
-if [[ $DOCKER == docker ]]; then
+if [[ $DOCKER_TYPE == docker ]]; then
     DOCKER_RUN_FLAGS+=(--user="$(id -u):$(id -g)")
 fi
 

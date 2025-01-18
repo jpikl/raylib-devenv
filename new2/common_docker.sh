@@ -2,7 +2,11 @@
 
 DOCKER_IMAGE=${DOCKER_IMAGE:-"$APP_CODE-build-env"}
 
-if [ ! "${DOCKER-}" ]; then
+if [[ "${DOCKER:=}" && ! -x "$DOCKER" ]]; then
+    die "DOCKER='$DOCKER' is not executable"
+fi
+
+if [ ! "$DOCKER" ]; then
     if [ -x "$(command -v podman)" ]; then
         DOCKER=podman
     elif [ -x "$(command -v docker)" ]; then
@@ -11,3 +15,6 @@ if [ ! "${DOCKER-}" ]; then
         die "Neither podman or docker is installed"
     fi
 fi
+
+# shellcheck disable=SC2034
+DOCKER_TYPE=$(basename "$DOCKER")

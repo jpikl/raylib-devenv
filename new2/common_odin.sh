@@ -2,14 +2,11 @@
 
 ROOT_DIR=$(dirname "$0")
 
-ODIN=${ODIN-}
-ODIN_ROOT=${ODIN_ROOT-}
-
-if [[ "$ODIN" && ! -x "$ODIN" ]]; then
+if [[ "${ODIN:=}" && ! -x "$ODIN" ]]; then
     die "ODIN='$ODIN' is not executable"
 fi
 
-if [[ "$ODIN_ROOT" && ! -d "$ODIN_ROOT" ]]; then
+if [[ "${ODIN_ROOT:=}" && ! -d "$ODIN_ROOT" ]]; then
     die "ODIN_ROOT='$ODIN_ROOT' is not a directory"
 fi
 
@@ -37,7 +34,7 @@ ODIN_FLAGS=(
     -collection:helpers="$ROOT_DIR/helpers"
 )
 
-if [[ ${DEBUG-} = 1 || ${DEBUG-} = true ]]; then
+if [[ $DEBUG ]]; then
     ODIN_FLAGS+=(-debug)
 else
     ODIN_FLAGS+=(-o:speed)
