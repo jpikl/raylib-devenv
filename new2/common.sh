@@ -2,6 +2,7 @@
 
 # Project specific configuration overrides
 if [[ -f config.sh ]]; then
+    # shellcheck disable=SC1091
     source config.sh
 fi
 

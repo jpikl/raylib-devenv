@@ -2,18 +2,18 @@
 
 set -euo pipefail
 
-SCRIPTS_DIR=$(dirname "$0")
+ROOT_DIR=$(dirname "$0")
 PROJECT_DIR=$PWD
 PLATFORM=$1
 shift
 
-source $SCRIPTS_DIR/common.sh
-source $SCRIPTS_DIR/common_docker.sh
+source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_docker.sh"
 
 DOCKER_RUN_FLAGS=(
     --rm
     --volume "$PROJECT_DIR:/mnt/project"
-    --volume "$SCRIPTS_DIR:/mnt/scripts"
+    --volume "$ROOT_DIR:/mnt/scripts"
     --workdir /mnt/project
     --env "DEBUG=${DEBUG-}"
 )

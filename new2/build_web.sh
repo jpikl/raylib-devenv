@@ -2,9 +2,11 @@
 
 set -euo pipefail
 
-source "$(dirname "$0")/common.sh"
-source "$(dirname "$0")/common_web.sh"
-source "$(dirname "$0")/common_odin.sh"
+ROOT_DIR=$(dirname "$0")
+
+source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_web.sh"
+source "$ROOT_DIR/common_odin.sh"
 
 run rm -rf "$WEB_OUT_DIR"
 run mkdir -p "$WEB_OUT_DIR"
@@ -49,7 +51,7 @@ ODIN_FLAGS+=(
 run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
-   "$(dirname "$0")/web/main.c"
+   "$ROOT_DIR/web/main.c"
    "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 )
 
@@ -77,5 +79,5 @@ run "$EMCC" "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
 run rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 
 if [[ "${1-}" == -r ]]; then
-    "$(dirname "$0")/run_web.sh"
+    "$ROOT_DIR/run_web.sh"
 fi

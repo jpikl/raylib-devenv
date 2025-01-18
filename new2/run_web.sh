@@ -2,8 +2,10 @@
 
 set -euo pipefail
 
-source "$(dirname "$0")/common.sh"
-source "$(dirname "$0")/common_web.sh"
+ROOT_DIR=$(dirname "$0")
+
+source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_web.sh"
 
 URL=http://127.0.0.1:8000
 

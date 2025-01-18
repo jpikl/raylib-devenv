@@ -1,5 +1,7 @@
 # shellcheck shell=bash
 
+ROOT_DIR=$(dirname "$0")
+
 ODIN=${ODIN-}
 ODIN_ROOT=${ODIN_ROOT-}
 
@@ -32,7 +34,7 @@ ODIN_FLAGS=(
     -define:APP_NAME="${APP_NAME}"
     -define:APP_VERSION="${APP_VERSION}"
     -define:ASSETS_DIR="${ASSETS_DIR}"
-    -collection:helpers="$(dirname "$0")/helpers"
+    -collection:helpers="$ROOT_DIR/helpers"
 )
 
 if [[ ${DEBUG-} = 1 || ${DEBUG-} = true ]]; then

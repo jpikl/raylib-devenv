@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-source "$(dirname "$0")/common.sh"
-source "$(dirname "$0")/common_linux.sh"
+ROOT_DIR=$(dirname "$0")
+
+source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/common_linux.sh"
 
 cd "$LINUX_OUT_DIR" && "./$LINUX_BINARY"
