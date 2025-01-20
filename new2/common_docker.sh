@@ -1,7 +1,5 @@
 # shellcheck shell=bash
 
-DOCKER_IMAGE=${DOCKER_IMAGE:-"$APP_CODE-build-env"}
-
 if [[ "${DOCKER:=}" && ! -x "$DOCKER" ]]; then
     die "DOCKER='$DOCKER' is not executable"
 fi
@@ -18,9 +16,8 @@ fi
 
 # shellcheck disable=SC2034
 DOCKER_TYPE=$(basename "$DOCKER")
+DOCKER_IMAGE=${DOCKER_IMAGE:-"$APP_CODE-build-env"}
 
-print_docker_vars() {
-    print_var DOCKER
-    print_var DOCKER_TYPE
-    print_var DOCKER_IMAGE
-}
+print_var DOCKER
+print_var DOCKER_TYPE
+print_var DOCKER_IMAGE

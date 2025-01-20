@@ -44,6 +44,5 @@ if [[ -v ODIN_EXTRA_FLAGS[@] ]]; then
     ODIN_FLAGS+=("${ODIN_EXTRA_FLAGS[@]}")
 fi
 
-print_odin_vars() {
-    print_var ODIN
-}
+print_var ODIN
+print_arr ODIN_EXTRA_FLAGS

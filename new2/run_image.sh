@@ -11,8 +11,6 @@ source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_docker.sh"
 
-print_docker_vars
-
 DOCKER_RUN_FLAGS=(
     --rm
     --volume "$PROJECT_DIR:/mnt/project"
@@ -25,4 +23,4 @@ if [[ $DOCKER_TYPE == docker ]]; then
     DOCKER_RUN_FLAGS+=(--user="$(id -u):$(id -g)")
 fi
 
-"$DOCKER" run "${DOCKER_RUN_FLAGS[@]}" "$DOCKER_IMAGE:$PLATFORM" "$@"
+run "$DOCKER" run "${DOCKER_RUN_FLAGS[@]}" "$DOCKER_IMAGE:$PLATFORM" "$@"

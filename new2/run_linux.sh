@@ -8,4 +8,5 @@ source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_linux.sh"
 
-cd "$LINUX_OUT_DIR" && "./$LINUX_BINARY"
+run cd "$LINUX_OUT_DIR"
+run "./$LINUX_BINARY"
