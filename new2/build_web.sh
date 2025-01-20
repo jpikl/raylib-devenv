@@ -30,6 +30,7 @@ fi
 
 print_var EMSDK_HOME
 print_var EMCC
+print_arr EMCC_EXTRA_FLAGS
 
 run rm -rf "$WEB_OUT_DIR"
 run mkdir -p "$WEB_OUT_DIR"
