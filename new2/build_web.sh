@@ -6,31 +6,27 @@ ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/common_build.sh"
-source "$ROOT_DIR/common_web.sh"
 source "$ROOT_DIR/common_odin.sh"
+source "$ROOT_DIR/common_web.sh"
 
-if [[ "${EMCC:=}" && ! -x "$EMCC" ]]; then
-    die "EMCC='$EMCC' is not executable"
+if [[ "${EMSDK_HOME:=}" ]]; then
+    check_var_is_dir EMSDK_HOME
+    # Print here because the sourced script will erase it
+    print_var EMSDK_HOME
+    run source "$EMSDK_HOME/emsdk_env.sh"
 fi
 
-if [[ "${EMSDK_HOME:=}" && ! -d "$EMSDK_HOME" ]]; then
-    die "EMSDK_HOME='$EMSDK_HOME' is not a directory"
+if [[ "${EMCC:=}" ]]; then
+    check_var_is_executable EMCC
+else
+    EMCC=$(find_executable emcc)
 fi
 
-if [[ ! "$EMCC" ]]; then
-    if [[ "$EMSDK_HOME" ]]; then
-        run source "$EMSDK_HOME/emsdk_env.sh"
-    fi
-    if [[ -x "$(command -v emcc)" ]]; then
-        EMCC=emcc
-    else
-        die "Could not find emcc binary"
-    fi
-fi
-
-print_var EMSDK_HOME
 print_var EMCC
 print_arr EMCC_EXTRA_FLAGS
+
+check_var_is_dir SRC_DIR
+check_var_is_file WEB_SHELL
 
 run rm -rf "$WEB_OUT_DIR"
 run mkdir -p "$WEB_OUT_DIR"

@@ -68,6 +68,54 @@ normalize_bool() {
     esac
 }
 
+check_var_is_set() {
+    if [[ ! "${!1-}" ]]; then
+        die "$1 must be set but is empty"
+    fi
+}
+
+
+check_var_is_dir() {
+    check_var_is_set "$1"
+
+    if [[ ! -d "${!1}" ]]; then
+        die "$1='${!1}' is not a directory"
+    fi
+}
+
+check_var_is_file() {
+    check_var_is_set "$1"
+
+    if [[ ! -f "${!1}" ]]; then
+        die "$1='${!1}' is not a file"
+    fi
+}
+
+check_var_is_executable() {
+    check_var_is_set "$1"
+
+    if [[ ! -x "${!1}" ]]; then
+        die "$1='${!1}' is not executable"
+    fi
+}
+
+find_executable() {
+    local arg
+
+    for arg; do
+        if [[ -x "$(command -v "$arg")" ]]; then
+            echo "$arg"
+            return
+        fi
+    done
+
+    if [[ ${#@} -eq 1 ]]; then
+        die "Could not find executable: $1"
+    else
+        die "Could not find any of these executables: $*"
+    fi
+}
+
 # Project specific configuration overrides
 if [[ -f config.sh ]]; then
     # shellcheck disable=SC1091

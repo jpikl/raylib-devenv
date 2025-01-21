@@ -1,17 +1,9 @@
 # shellcheck shell=bash
 
-if [[ "${DOCKER:=}" && ! -x "$DOCKER" ]]; then
-    die "DOCKER='$DOCKER' is not executable"
-fi
-
-if [ ! "$DOCKER" ]; then
-    if [ -x "$(command -v podman)" ]; then
-        DOCKER=podman
-    elif [ -x "$(command -v docker)" ]; then
-        DOCKER=docker
-    else
-        die "Neither podman or docker is installed"
-    fi
+if [[ "${DOCKER:=}" ]]; then
+    check_var_is_executable DOCKER
+else
+    DOCKER=$(find_executable podman docker)
 fi
 
 # shellcheck disable=SC2034

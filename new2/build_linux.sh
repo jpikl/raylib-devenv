@@ -6,8 +6,10 @@ ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/common_build.sh"
-source "$ROOT_DIR/common_linux.sh"
 source "$ROOT_DIR/common_odin.sh"
+source "$ROOT_DIR/common_linux.sh"
+
+check_var_is_dir SRC_DIR
 
 run rm -rf "$LINUX_OUT_DIR"
 run mkdir -p "$LINUX_OUT_DIR"

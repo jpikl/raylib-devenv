@@ -2,22 +2,15 @@
 
 ROOT_DIR=$(dirname "$0")
 
-if [[ "${ODIN:=}" && ! -x "$ODIN" ]]; then
-    die "ODIN='$ODIN' is not executable"
+if [[ "${ODIN_ROOT:=}" ]]; then
+    check_var_is_dir ODIN_ROOT
+    export PATH=$PATH:$ODIN_ROOT
 fi
 
-if [[ "${ODIN_ROOT:=}" && ! -d "$ODIN_ROOT" ]]; then
-    die "ODIN_ROOT='$ODIN_ROOT' is not a directory"
-fi
-
-if [[ ! "$ODIN" ]]; then
-    if [[ -x "$(command -v odin)" ]]; then
-        ODIN=odin
-    elif [[ "$ODIN_ROOT" && -x "$ODIN_ROOT/odin" ]]; then
-        ODIN=$ODIN_ROOT/odin
-    else
-        die "Could not find odin binary"
-    fi
+if [[ "${ODIN:=}" ]]; then
+    check_var_is_executable ODIN
+else
+    ODIN=$(find_executable odin)
 fi
 
 if [[ ! "$ODIN_ROOT" ]]; then

@@ -13,6 +13,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-$JDK_VERSION-openjdk-amd64
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         git \
+        build-essential \
         openjdk-$JDK_VERSION-jdk-headless \
         sdkmanager \
         && \
@@ -34,14 +35,12 @@ RUN sdkmanager --install "platforms;android-$ANDROID_API_VERSION" && \
     sdkmanager --install "ndk;$ANDROID_NDK_VERSION"
 
 ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_API_VERSION=$ANDROID_API_VERSION
+ENV ANDROID_PLATFORM=$ANDROID_HOME/platforms/android-$ANDROID_API_VERSION
+ENV ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools
+ENV ANDROID_BUILD_TOOLS=$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION
 ENV ANDROID_NDK=$ANDROID_HOME/ndk/$ANDROID_NDK_VERSION
 ENV ANDROID_TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
-ENV ANDROID_BUILD_TOOLS=$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION
-ENV ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools
-ENV ANDROID_PLATFORM=$ANDROID_HOME/platforms/android-$ANDROID_API_VERSION
-ENV ANDROID_API_VERSION=$ANDROID_API_VERSION
-
-ENV PATH=$PATH:$ANDROID_PLATFORM_TOOLS
 
 # =============================================================================
 # Raylib
