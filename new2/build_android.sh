@@ -23,7 +23,11 @@ abi_to_odin_target() {
     esac
 }
 
-ODIN_FLAGS+=(-build-mode:obj -reloc-mode:pic)
+ODIN_FLAGS+=(
+    -build-mode:obj
+    -reloc-mode:pic
+    -define:IS_ANDROID=true
+)
 
 for ABI in "${ANDROID_ABIS[@]}"; do
     run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -target:"$(abi_to_odin_target "$ABI")" -out:"$ANDROID_OUT_DIR/$APP_CODE.$ABI.o"
@@ -35,6 +39,8 @@ if [[ -d "$ASSETS_DIR" ]]; then
 else
     skip "No ASSETS_DIR='$ASSETS_DIR' to copy"
 fi
+
+#run rm "$ANDROID_OUT_DIR"/*.o
 
 if [[ "${1-}" == -r ]]; then
     "$ROOT_DIR/run_android.sh"

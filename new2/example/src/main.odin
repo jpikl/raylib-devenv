@@ -37,8 +37,10 @@ init :: proc() -> bool {
 }
 
 update :: proc() -> bool {
-    if rl.WindowShouldClose() {
-        return false
+    when !app.IS_WEB {
+        if rl.WindowShouldClose() {
+            return false
+        }
     }
 
     rl.BeginDrawing()

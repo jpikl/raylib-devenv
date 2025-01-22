@@ -12,6 +12,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-$JDK_VERSION-openjdk-amd64
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
+        ed \
         git \
         build-essential \
         openjdk-$JDK_VERSION-jdk-headless \
@@ -47,27 +48,41 @@ ENV ANDROID_TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 # =============================================================================
 
 ARG RAYLIB_VERSION=5.5
+ARG RAYGUI_VERSION=4.0
 
-ENV RAYLIB_INCLUDE_PATH=/usr/local/include
-ENV RAYLIB_LIB_PATH=/usr/local/lib/raylib
-
+# We build raylib + raygui together into a single static library.
+# Building separate static libraries (as Odin vendor package expects) is too much complicated.
 RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/raylib.git /tmp/raylib && \
+    git clone --depth 1 --branch "$RAYGUI_VERSION" https://github.com/raysan5/raygui.git /tmp/raygui && \
     cd /tmp/raylib/src && \
-    # Android armeabi-v7a
+    # ARM 32
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm && \
-    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$RAYLIB_LIB_PATH/android-armeabi-v7a && \
-    # Android arm64-v8a
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm RAYLIB_MODULE_RAYGUI=true && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/arm && \
+    # ARM 64
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm64 && \
-    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$RAYLIB_LIB_PATH/android-arm64-v8a && \
-    # Android x86
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm64 RAYLIB_MODULE_RAYGUI=true && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/arm64 && \
+    # x86
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86 && \
-    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$RAYLIB_LIB_PATH/android-x86 && \
-    # Android x86_64
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86 RAYLIB_MODULE_RAYGUI=true && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/x86 && \
+    # x86_64
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86_64 && \
-    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$RAYLIB_LIB_PATH/android-x86_64 && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86_64 RAYLIB_MODULE_RAYGUI=true && \
+    make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/x86_64 && \
     # Get rid of the cloned repo
-    rm -r /tmp/raylib
+    rm -r /tmp/raylib /tmp/raygui
+
+# =============================================================================
+# Odin
+# =============================================================================
+
+COPY android_raylib.ed /tmp
+COPY android_raygui.ed /tmp
+
+# Patch odin raylib bindings to use our custom raylib build
+RUN ed -s $ODIN_ROOT/vendor/raylib/raylib.odin </tmp/android_raylib.ed && \
+    ed -s $ODIN_ROOT/vendor/raylib/raygui.odin </tmp/android_raygui.ed && \
+    rm /tmp/android_raylib.ed && \
+    rm /tmp/android_raygui.ed

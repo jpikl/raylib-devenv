@@ -1,4 +1,4 @@
-#+build wasm32
+#+build wasm32, wasm64p32
 package app
 
 import "base:runtime"

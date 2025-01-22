@@ -35,6 +35,7 @@ ODIN_FLAGS+=(
     -target:freestanding_wasm32
     -build-mode:obj
     -define:TEMP_ALLOCATOR_SIZE="$WEB_TEMP_ALLOCATOR_SIZE"
+    -define:IS_WEB=true
 
     # This env.o thing is the object file that contains things linked into the WASM binary.
     # You can see how RAYLIB_WASM_LIB is used inside <odin>/vendor/raylib/raylib.odin.

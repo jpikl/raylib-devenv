@@ -1,7 +1,5 @@
 # shellcheck shell=bash
 
-ROOT_DIR=$(dirname "$0")
-
 ANDROID_OUT_DIR=${ANDROID_OUT_DIR:-"$OUT_DIR/android"}
 ANDROID_HOME=${ANDROID_HOME-}
 ANDROID_API_VERSION=${ANDROID_API_VERSION-}
@@ -22,13 +20,12 @@ if [[ ! ${ANDROID_NDK:=} && ${ANDROID_NDK_VERSION-} ]]; then
     ANDROID_NDK=$ANDROID_HOME/ndk/$ANDROID_NDK_VERSION
 fi
 
-
 ANDROID_TOOLCHAIN=${ANDROID_TOOLCHAIN:-"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64"}
 
 if [[ ! -v ANDROID_ABIS[@] ]]; then
+    # odin build fails for armeabi-v7a due to some weird LLVM error
+    # ANDROID_ABIS=(arm64-v8a armeabi-v7a x86 x86_64)
     ANDROID_ABIS=(arm64-v8a x86 x86_64)
-    # odin build fails for armeabi-v7a
-    #ANDROID_ABIS=(arm64-v8a armeabi-v7a x86 x86_64)
 fi
 
 check_var_is_dir ANDROID_HOME
