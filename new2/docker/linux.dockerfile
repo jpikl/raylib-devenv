@@ -31,3 +31,16 @@ RUN mkdir -p "$ODIN_ROOT" && \
     unzip "/tmp/$ODIN_ARCHIVE" -d /tmp && \
     tar xf /tmp/dist.tar.gz --strip-components=1 --directory="$ODIN_ROOT" && \
     rm "/tmp/$ODIN_ARCHIVE" /tmp/dist.tar.gz
+
+ENV PATH=$PATH:$ODIN_ROOT
+
+# =============================================================================
+# Entrypoint
+# =============================================================================
+
+ARG SCRIPTS_DIR=/mnt/scripts
+
+# Make all scripts available at path
+ENV PATH=$PATH:$SCRIPTS_DIR
+
+CMD ["bash"]

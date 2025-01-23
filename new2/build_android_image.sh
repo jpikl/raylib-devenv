@@ -8,4 +8,5 @@ source "$ROOT_DIR/build_linux_image.sh"
 
 run "$DOCKER" build --tag "$DOCKER_IMAGE:android" \
                     --build-arg BASE_DOCKER_IMAGE="$DOCKER_IMAGE:linux" \
-                    --file "$ROOT_DIR/docker/android.dockerfile"
+                    --file "$ROOT_DIR/docker/android.dockerfile" \
+                    "$@"

@@ -9,11 +9,9 @@ source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_odin.sh"
 source "$ROOT_DIR/common_web.sh"
 
-if [[ "${EMSDK_HOME:=}" ]]; then
-    check_var_is_dir EMSDK_HOME
-    # Print here because the sourced script will erase it
-    print_var EMSDK_HOME
-    run source "$EMSDK_HOME/emsdk_env.sh"
+if [[ "${EMSDK:=}" ]]; then
+    check_var_is_dir EMSDK
+    run source "$EMSDK/emsdk_env.sh"
 fi
 
 if [[ "${EMCC:=}" ]]; then
@@ -22,6 +20,7 @@ else
     EMCC=$(find_executable emcc)
 fi
 
+print_var EMSDK
 print_var EMCC
 print_arr EMCC_EXTRA_FLAGS
 

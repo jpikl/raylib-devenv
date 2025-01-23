@@ -13,11 +13,15 @@ source "$ROOT_DIR/common_docker.sh"
 
 DOCKER_RUN_FLAGS=(
     --rm
-    --volume "$PROJECT_DIR:/mnt/project"
-    --volume "$ROOT_DIR:/mnt/scripts"
-    --workdir /mnt/project
+    --volume "$PROJECT_DIR:$DOCKER_PROJECT_DIR"
+    --volume "$ROOT_DIR:$DOCKER_SCRIPTS_DIR"
+    --workdir "$DOCKER_PROJECT_DIR"
     --env "DEBUG=$DEBUG"
 )
+
+if [[ $# -eq 0 ]]; then
+    DOCKER_RUN_FLAGS+=(--interactive --tty)
+fi
 
 if [[ $DOCKER_TYPE == docker ]]; then
     DOCKER_RUN_FLAGS+=(--user="$(id -u):$(id -g)")

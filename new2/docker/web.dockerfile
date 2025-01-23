@@ -21,9 +21,18 @@ RUN apt-get -y update && \
 
 ARG EMSDK_VERSION=3.1.74
 
-ENV EMSDK_HOME=/opt/emsdk
+ENV EMSDK=/opt/emsdk
 
-RUN git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$EMSDK_HOME" && \
-    cd "$EMSDK_HOME" && \
+RUN git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$EMSDK" && \
+    cd "$EMSDK" && \
     ./emsdk install "$EMSDK_VERSION" && \
     ./emsdk activate "$EMSDK_VERSION"
+
+# =============================================================================
+# Entrypoint
+# =============================================================================
+
+COPY web_entrypoint.sh /usr/local/bin/entrypoint
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+CMD ["bash"]
