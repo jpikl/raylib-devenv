@@ -57,19 +57,19 @@ RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/ra
     cd /tmp/raylib/src && \
     # ARM 32
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm RAYLIB_MODULE_RAYGUI=true && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm RAYLIB_MODULE_RAYGUI=TRUE && \
     make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/arm && \
     # ARM 64
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm64 RAYLIB_MODULE_RAYGUI=true && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=arm64 RAYLIB_MODULE_RAYGUI=TRUE && \
     make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/arm64 && \
     # x86
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86 RAYLIB_MODULE_RAYGUI=true && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86 RAYLIB_MODULE_RAYGUI=TRUE && \
     make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/x86 && \
     # x86_64
     make clean && \
-    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86_64 RAYLIB_MODULE_RAYGUI=true && \
+    make PLATFORM=PLATFORM_ANDROID ANDROID_ARCH=x86_64 RAYLIB_MODULE_RAYGUI=TRUE && \
     make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/x86_64 && \
     # Get rid of the cloned repo
     rm -r /tmp/raylib /tmp/raygui
