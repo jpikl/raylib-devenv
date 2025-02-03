@@ -12,11 +12,11 @@ ENV JAVA_HOME=/usr/lib/jvm/java-$JDK_VERSION-openjdk-amd64
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
-        ed \
         git \
         build-essential \
         openjdk-$JDK_VERSION-jdk-headless \
         sdkmanager \
+        imagemagick \
         && \
     # Clean apt cache to reduce image size
     rm -rf /var/lib/apt/lists/*
@@ -42,6 +42,8 @@ ENV ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools
 ENV ANDROID_BUILD_TOOLS=$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION
 ENV ANDROID_NDK=$ANDROID_HOME/ndk/$ANDROID_NDK_VERSION
 ENV ANDROID_TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
+
+ENV PATH=$PATH:$ANDROID_PLATFORM_TOOLS
 
 # =============================================================================
 # Raylib
@@ -73,16 +75,3 @@ RUN git clone --depth 1 --branch "$RAYLIB_VERSION" https://github.com/raysan5/ra
     make install PLATFORM=PLATFORM_ANDROID RAYLIB_INSTALL_PATH=$ODIN_ROOT/vendor/raylib/android/x86_64 && \
     # Get rid of the cloned repo
     rm -r /tmp/raylib /tmp/raygui
-
-# =============================================================================
-# Odin
-# =============================================================================
-
-COPY android_raylib.ed /tmp
-COPY android_raygui.ed /tmp
-
-# Patch odin raylib bindings to use our custom raylib build
-RUN ed -s $ODIN_ROOT/vendor/raylib/raylib.odin </tmp/android_raylib.ed && \
-    ed -s $ODIN_ROOT/vendor/raylib/raygui.odin </tmp/android_raygui.ed && \
-    rm /tmp/android_raylib.ed && \
-    rm /tmp/android_raygui.ed

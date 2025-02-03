@@ -122,8 +122,8 @@ if [[ -f config.sh ]]; then
     source config.sh
 fi
 
-APP_CODE=${APP_CODE:-"app"}
-APP_NAME=${APP_NAME:-"App"}
+APP_CODE=${APP_CODE:-"raylib-app"}
+APP_NAME=${APP_NAME:-"Raylib App"}
 APP_VERSION=${APP_VERSION:-"1.0.0"}
 
 print_var APP_CODE

@@ -1,47 +1,42 @@
 # shellcheck shell=bash
 
+ROOT_DIR=$(dirname "$0")
+
+gen_package_name() {
+    printf "com."
+    echo "$1" | tr '[:upper:]' '[:lower:]' | tr -cd "a-z0-9_"
+}
+
+gen_version_code() {
+    local result=0
+    local item
+
+    while read -r item; do
+        result=$((result * 1000 + item))
+    done < <(echo "$1" | tr . $'\n')
+
+    echo "$result"
+}
+
 ANDROID_OUT_DIR=${ANDROID_OUT_DIR:-"$OUT_DIR/android"}
-ANDROID_HOME=${ANDROID_HOME-}
-ANDROID_API_VERSION=${ANDROID_API_VERSION-}
-
-if [[ ! ${ANDROID_PLATFORM:=} && ${ANDROID_API_VERSION-} ]]; then
-    ANDROID_PLATFORM=$ANDROID_HOME/platforms/android-$ANDROID_API_VERSION
-fi
-
-if [[ ! ${ANDROID_PLATFORM_TOOLS:=} ]]; then
-    ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools
-fi
-
-if [[ ! ${ANDROID_BUILD_TOOLS:=} && ${ANDROID_BUILD_TOOLS_VERSION-} ]]; then
-    ANDROID_BUILD_TOOLS=$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION
-fi
-
-if [[ ! ${ANDROID_NDK:=} && ${ANDROID_NDK_VERSION-} ]]; then
-    ANDROID_NDK=$ANDROID_HOME/ndk/$ANDROID_NDK_VERSION
-fi
-
-ANDROID_TOOLCHAIN=${ANDROID_TOOLCHAIN:-"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64"}
-
-if [[ ! -v ANDROID_ABIS[@] ]]; then
-    # odin build fails for armeabi-v7a due to some weird LLVM error
-    # ANDROID_ABIS=(arm64-v8a armeabi-v7a x86 x86_64)
-    ANDROID_ABIS=(arm64-v8a x86 x86_64)
-fi
-
-check_var_is_dir ANDROID_HOME
-check_var_is_set ANDROID_API_VERSION
-check_var_is_dir ANDROID_PLATFORM
-check_var_is_dir ANDROID_PLATFORM_TOOLS
-check_var_is_dir ANDROID_BUILD_TOOLS
-check_var_is_dir ANDROID_NDK
-check_var_is_dir ANDROID_TOOLCHAIN
+ANDROID_APK=${ANDROID_APK:-"$APP_CODE.apk"}
+ANDROID_PACKAGE=${ANDROID_PACKAGE:-"$(gen_package_name "$APP_CODE")"}
+# shellcheck disable=SC2034
+ANDROID_PACKAGE_DIR=${ANDROID_PACKAGE//./\/}
+ANDROID_MANIFEST=${ANDROID_MANIFEST:-"$ROOT_DIR/android/AndroidManifest.xml"}
+ANDROID_LABEL=${ANDROID_LABEL:-"$APP_NAME"}
+ANDROID_VERSION_NAME=${ANDROID_VERSION_NAME:-"$APP_VERSION"}
+ANDROID_VERSION_CODE=${ANDROID_VERSION_CODE:-"$(gen_version_code "$ANDROID_VERSION_NAME")"}
+ANDROID_ICON=${ANDROID_ICON:-"$ROOT_DIR/android/icon.png"}
+ANDROID_ORIENTATION=${ANDROID_ORIENTATION:-"landscape"}
 
 print_var ANDROID_OUT_DIR
-print_var ANDROID_HOME
-print_var ANDROID_API_VERSION
-print_var ANDROID_PLATFORM
-print_var ANDROID_PLATFORM_TOOLS
-print_var ANDROID_BUILD_TOOLS
-print_var ANDROID_NDK
-print_var ANDROID_TOOLCHAIN
-print_arr ANDROID_ABIS
+print_var ANDROID_APK
+print_var ANDROID_PACKAGE
+print_var ANDROID_PACKAGE_DIR
+print_var ANDROID_MANIFEST
+print_var ANDROID_LABEL
+print_var ANDROID_VERSION_NAME
+print_var ANDROID_VERSION_CODE
+print_var ANDROID_ICON
+print_var ANDROID_ORIENTATION

@@ -6,7 +6,7 @@ ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/common_build.sh"
-#source "$ROOT_DIR/common_android.sh"
+source "$ROOT_DIR/common_android.sh"
 
-adb install "out/android/game.apk"
-adb shell am start -n com.example/.NativeLoader
+adb install "$ANDROID_OUT_DIR/$ANDROID_APK"
+adb shell am start -n "$ANDROID_PACKAGE/.MainActivity"

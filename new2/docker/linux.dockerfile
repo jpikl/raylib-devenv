@@ -28,6 +28,7 @@ ENV ODIN_ROOT=/opt/odin
 RUN mkdir -p "$ODIN_ROOT" && \
     curl --location --fail --output "/tmp/$ODIN_ARCHIVE" "$ODIN_URL" && \
     # Probably due to some packaging issue, the zip file does not include files directly but has intermediate `dist.tar.gz` in it.
+    # For previous version, we just did: tar xf "/tmp/$ODIN_ARCHIVE" --strip-components=1 --directory="$ODIN_ROOT"
     unzip "/tmp/$ODIN_ARCHIVE" -d /tmp && \
     tar xf /tmp/dist.tar.gz --strip-components=1 --directory="$ODIN_ROOT" && \
     rm "/tmp/$ODIN_ARCHIVE" /tmp/dist.tar.gz
