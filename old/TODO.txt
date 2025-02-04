@@ -1,8 +1,0 @@
-Target                       | Library | C example | Odin example
------------------------------|---------|-----------|--------------
-Static (Linux)               | Yes     | Yes       | -
-Shared (Linux)               | Yes     | Yes       | -
-Static (Win64 cross compile) | Yes     | Yes       | -
-Shared (Win64 cross compile) | Yes     | Yes       | -
-Web                          | Yes     | Yes       | -
-Android                      | Yes     | Yes       | -
