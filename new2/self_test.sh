@@ -45,9 +45,19 @@ cd "$ROOT_DIR/example"
 
 assert "../build_linux_image.sh"
 assert "../build_linux_dockerized.sh"
-assert "test -x out/linux/app"
+assert "test -x out/linux/raylib-app"
 assert "test -f out/linux/assets/coin.wav"
 assert "test -f out/linux/assets/raylib.png"
+
+# ================================================================================
+# Windows
+# ================================================================================
+
+assert "../build_windows_image.sh"
+assert "../build_windows_dockerized.sh"
+assert "test -x out/windows/raylib-app.exe"
+assert "test -f out/windows/assets/coin.wav"
+assert "test -f out/windows/assets/raylib.png"
 
 # ================================================================================
 # Web
@@ -66,6 +76,7 @@ assert "test -f out/web/index.wasm"
 
 assert "../build_android_image.sh"
 assert "../build_android_dockerized.sh"
+assert "test -f out/android/raylib-app.apk"
 
 # ================================================================================
 # Results

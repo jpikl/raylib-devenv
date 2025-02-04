@@ -178,29 +178,32 @@ run d8 \
     --lib "$ANDROID_PLATFORM/android.jar" \
     "$ANDROID_OUT_DIR/classes/$ANDROID_PACKAGE_DIR/MainActivity.class"
 
-run mkdir -p "$ANDROID_OUT_DIR/res/drawable-ldpi"
-run mkdir -p "$ANDROID_OUT_DIR/res/drawable-mdpi"
-run mkdir -p "$ANDROID_OUT_DIR/res/drawable-hdpi"
-run mkdir -p "$ANDROID_OUT_DIR/res/drawable-xhdpi"
-run mkdir -p "$ANDROID_OUT_DIR/res/drawable-xxhdpi"
-run mkdir -p "$ANDROID_OUT_DIR/res/drawable-xxxhdpi"
+make_icon() {
+    run mkdir -p "$ANDROID_OUT_DIR/res/drawable-$1"
+    run convert "$ANDROID_ICON" -resize "${2}x${2}" "$ANDROID_OUT_DIR/res/drawable-$1/icon.png"
+}
 
-run convert "$ANDROID_ICON" -resize 36x36 "$ANDROID_OUT_DIR/res/drawable-ldpi/icon.png"
-run convert "$ANDROID_ICON" -resize 48x48 "$ANDROID_OUT_DIR/res/drawable-mdpi/icon.png"
-run convert "$ANDROID_ICON" -resize 72x72 "$ANDROID_OUT_DIR/res/drawable-hdpi/icon.png"
-run convert "$ANDROID_ICON" -resize 96x96 "$ANDROID_OUT_DIR/res/drawable-xhdpi/icon.png"
-run convert "$ANDROID_ICON" -resize 144x144 "$ANDROID_OUT_DIR/res/drawable-xxhdpi/icon.png"
-run convert "$ANDROID_ICON" -resize 192x192 "$ANDROID_OUT_DIR/res/drawable-xxxhdpi/icon.png"
+make_icon ldpi 36
+make_icon mdpi 48
+make_icon hdpi 72
+make_icon xhdpi 96
+make_icon xxhdpi 144
+make_icon xxxhdpi 192
+
+PACKAGE_OPTS=(
+    -f
+    -I "$ANDROID_PLATFORM/android.jar"
+    -S "$ANDROID_OUT_DIR/res"
+    -M "$ANDROID_OUT_DIR/AndroidManifest.xml"
+    -F "$ANDROID_OUT_DIR/$APP_CODE.unaligned.apk"
+)
+
+if [[ -d "$ASSETS_DIR" ]]; then
+    PACKAGE_OPTS+=(-A "$ASSETS_DIR")
+fi
 
 # Bundle APK
-run aapt package \
-    -f \
-    -A "$ASSETS_DIR" \
-    -I "$ANDROID_PLATFORM/android.jar" \
-    -S "$ANDROID_OUT_DIR/res" \
-    -M "$ANDROID_OUT_DIR/AndroidManifest.xml" \
-    -F "$ANDROID_OUT_DIR/$APP_CODE.unaligned.apk" \
-    "$ANDROID_OUT_DIR/raw"
+run aapt package "${PACKAGE_OPTS[@]}" "$ANDROID_OUT_DIR/raw"
 
 # Zipalign APK
 run zipalign -p -f 4 "$ANDROID_OUT_DIR/$APP_CODE.unaligned.apk" "$ANDROID_OUT_DIR/$APP_CODE.unsigned.apk"
