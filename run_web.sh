@@ -5,6 +5,7 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/config_app.sh"
 source "$ROOT_DIR/common_build.sh"
 source "$ROOT_DIR/common_web.sh"
 
@@ -15,7 +16,10 @@ if [[ -x "$(command -v emrun)" ]]; then
     run emrun --port "$PORT" "$WEB_OUT_DIR"
 elif [[ -x "$(command -v python)" ]]; then
     if [[ -x "$(command -v xdg-open)" ]]; then
-        (sleep 1; run xdg-open "$URL") &
+        (
+            sleep 1
+            run xdg-open "$URL"
+        ) &
     else
         echo "Open the following URL in your browser: $URL"
     fi

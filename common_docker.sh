@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 if [[ "${DOCKER:=}" ]]; then
-    check_var_is_executable DOCKER
+    assert_var_is_executable DOCKER
 else
     DOCKER=$(find_executable podman docker)
 fi

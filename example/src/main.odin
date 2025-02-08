@@ -1,7 +1,7 @@
 package main
 
+import "build:app"
 import "core:fmt"
-import "helpers:app"
 import rl "vendor:raylib"
 
 texture: rl.Texture2D
@@ -14,7 +14,7 @@ when app.IS_WEB {
         app.web_run(init, update)
     }
 } else {
-    main :: proc () {
+    main :: proc() {
         app.run(init, update, quit)
     }
 }

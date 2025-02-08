@@ -62,37 +62,36 @@ skip() {
 
 normalize_bool() {
     case "${!1-}" in
-        true|1) echo 1 ;;
-        false|0|"") ;;
-        *) die "Invalid $1='${!1}' value, expected one of [true, false, 1, 0, '']" ;;
+    true | 1) echo 1 ;;
+    false | 0 | "") ;;
+    *) die "Invalid $1='${!1}' value, expected one of [true, false, 1, 0, '']" ;;
     esac
 }
 
-check_var_is_set() {
+assert_var_is_set() {
     if [[ ! "${!1-}" ]]; then
         die "$1 must be set but is empty"
     fi
 }
 
-
-check_var_is_dir() {
-    check_var_is_set "$1"
+assert_var_is_dir() {
+    assert_var_is_set "$1"
 
     if [[ ! -d "${!1}" ]]; then
         die "$1='${!1}' is not a directory"
     fi
 }
 
-check_var_is_file() {
-    check_var_is_set "$1"
+assert_var_is_file() {
+    assert_var_is_set "$1"
 
     if [[ ! -f "${!1}" ]]; then
         die "$1='${!1}' is not a file"
     fi
 }
 
-check_var_is_executable() {
-    check_var_is_set "$1"
+assert_var_is_executable() {
+    assert_var_is_set "$1"
 
     if [[ ! -x "${!1}" ]]; then
         die "$1='${!1}' is not executable"
@@ -121,11 +120,3 @@ if [[ -f config.sh ]]; then
     # shellcheck disable=SC1091
     source config.sh
 fi
-
-APP_CODE=${APP_CODE:-"raylib-app"}
-APP_NAME=${APP_NAME:-"Raylib App"}
-APP_VERSION=${APP_VERSION:-"1.0.0"}
-
-print_var APP_CODE
-print_var APP_NAME
-print_var APP_VERSION

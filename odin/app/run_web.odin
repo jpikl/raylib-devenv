@@ -1,24 +1,24 @@
 #+build wasm32, wasm64p32
 package app
 
+import "../web"
 import "base:runtime"
 import "core:c"
 import rl "vendor:raylib"
-import "../web"
 
-@(default_calling_convention="c")
-foreign {
-	emscripten_set_main_loop :: proc(func: proc(), fps: c.int, simulate_infinite_loop: c.bool) ---
+@(default_calling_convention = "c")
+foreign _ {
+    emscripten_set_main_loop :: proc(func: proc(), fps: c.int, simulate_infinite_loop: c.bool) ---
 }
 
 @(private)
 web_context: runtime.Context
 
 @(private)
-web_init_impl : InitProc
+web_init_impl: InitProc
 
 @(private)
-web_update_impl : UpdateProc
+web_update_impl: UpdateProc
 
 web_run :: proc "c" (init: InitProc, update: UpdateProc) {
     web_context = web.create_context()

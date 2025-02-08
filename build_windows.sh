@@ -5,11 +5,12 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/config_app.sh"
 source "$ROOT_DIR/common_build.sh"
-source "$ROOT_DIR/common_odin.sh"
+source "$ROOT_DIR/config_odin.sh"
 source "$ROOT_DIR/common_windows.sh"
 
-check_var_is_dir SRC_DIR
+assert_var_is_dir SRC_DIR
 
 run rm -rf "$WINDOWS_OUT_DIR"
 run mkdir -p "$WINDOWS_OUT_DIR"
@@ -17,6 +18,7 @@ run mkdir -p "$WINDOWS_OUT_DIR"
 ODIN_FLAGS+=(
     -target:windows_amd64
     -build-mode:obj
+    -define:IS_WINDOWS=true
 )
 
 LINK_FLAGS+=(
@@ -26,11 +28,11 @@ LINK_FLAGS+=(
     /libpath:"$ODIN_ROOT/vendor/raylib/windows"
     # Should match libs from $ODIN_ROOT/vendor/raylib/raylib.odin
     /nodefaultlib:libcmt
-    user32.lib \
-    gdi32.lib \
-    shell32.lib \
-    winmm.lib \
-    raylib.lib \
+    user32.lib
+    gdi32.lib
+    shell32.lib
+    winmm.lib
+    raylib.lib
     raygui.lib
 )
 

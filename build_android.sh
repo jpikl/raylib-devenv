@@ -5,8 +5,9 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/config_app.sh"
 source "$ROOT_DIR/common_build.sh"
-source "$ROOT_DIR/common_odin.sh"
+source "$ROOT_DIR/config_odin.sh"
 source "$ROOT_DIR/common_android.sh"
 
 ANDROID_HOME=${ANDROID_HOME-}
@@ -41,13 +42,13 @@ ANDROID_TARGET_SDK_VERSION=${ANDROID_TARGET_SDK_VERSION:-"$ANDROID_API_VERSION"}
 
 JAVA_TARGET_VERSION=11
 
-check_var_is_dir ANDROID_HOME
-check_var_is_set ANDROID_API_VERSION
-check_var_is_dir ANDROID_PLATFORM
-check_var_is_dir ANDROID_PLATFORM_TOOLS
-check_var_is_dir ANDROID_BUILD_TOOLS
-check_var_is_dir ANDROID_NDK
-check_var_is_dir ANDROID_TOOLCHAIN
+assert_var_is_dir ANDROID_HOME
+assert_var_is_set ANDROID_API_VERSION
+assert_var_is_dir ANDROID_PLATFORM
+assert_var_is_dir ANDROID_PLATFORM_TOOLS
+assert_var_is_dir ANDROID_BUILD_TOOLS
+assert_var_is_dir ANDROID_NDK
+assert_var_is_dir ANDROID_TOOLCHAIN
 
 print_var ANDROID_HOME
 print_var ANDROID_API_VERSION
@@ -61,8 +62,8 @@ print_arr ANDROID_ABIS
 print_var ANDROID_MIN_SDK_VERSION
 print_var ANDROID_TARGET_SDK_VERSION
 
-check_var_is_file ANDROID_MANIFEST
-check_var_is_file ANDROID_ICON
+assert_var_is_file ANDROID_MANIFEST
+assert_var_is_file ANDROID_ICON
 
 # Keystore configuration
 KEYSTORE_FILE=${KEYSTORE_FILE:-".keystore"}
@@ -74,13 +75,13 @@ KEYSTORE_PASS=${KEYSTORE_PASS:-"$APP_CODE-123456"} # Must be at leas 6 character
 # See https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ldap/distinguished-names
 KEYSTORE_COMMON_NAME=${KEYSTORE_COMMON_NAME:-$APP_CODE}
 
-check_var_is_set KEYSTORE_FILE
-check_var_is_set KEYSTORE_DAYS
-check_var_is_set KEYSTORE_PASS
-check_var_is_set KEYSTORE_ALIAS
-check_var_is_set KEYSTORE_COMMON_NAME
+assert_var_is_set KEYSTORE_FILE
+assert_var_is_set KEYSTORE_DAYS
+assert_var_is_set KEYSTORE_PASS
+assert_var_is_set KEYSTORE_ALIAS
+assert_var_is_set KEYSTORE_COMMON_NAME
 
-check_var_is_dir SRC_DIR
+assert_var_is_dir SRC_DIR
 
 run rm -rf "$ANDROID_OUT_DIR"
 run mkdir -p "$ANDROID_OUT_DIR"
@@ -109,30 +110,30 @@ run mkdir -p "$ANDROID_OUT_DIR/obj"
 
 for ABI in "${ANDROID_ABIS[@]}"; do
     case "$ABI" in
-        x86)
-            ODIN_TARGET=linux_i386
-            CC_PREFIX="i686-linux-android"
-            RAYLIB_DIR=x86
-            ;;
+    x86)
+        ODIN_TARGET=linux_i386
+        CC_PREFIX="i686-linux-android"
+        RAYLIB_DIR=x86
+        ;;
 
-        x86_64)
-            ODIN_TARGET=linux_amd64
-            CC_PREFIX="x86_64-linux-android"
-            RAYLIB_DIR=x86_64
+    x86_64)
+        ODIN_TARGET=linux_amd64
+        CC_PREFIX="x86_64-linux-android"
+        RAYLIB_DIR=x86_64
 
-            ;;
+        ;;
 
-        armeabi-v7a)
-            ODIN_TARGET=linux_arm32
-            CC_PREFIX="armv7a-linux-androideabi"
-            RAYLIB_DIR=arm
-            ;;
+    armeabi-v7a)
+        ODIN_TARGET=linux_arm32
+        CC_PREFIX="armv7a-linux-androideabi"
+        RAYLIB_DIR=arm
+        ;;
 
-        arm64-v8a)
-            ODIN_TARGET=linux_arm64
-            CC_PREFIX="aarch64-linux-android"
-            RAYLIB_DIR=arm64
-            ;;
+    arm64-v8a)
+        ODIN_TARGET=linux_arm64
+        CC_PREFIX="aarch64-linux-android"
+        RAYLIB_DIR=arm64
+        ;;
     esac
 
     run mkdir -p "$ANDROID_OUT_DIR/raw/lib/$ABI"
@@ -141,7 +142,7 @@ for ABI in "${ANDROID_ABIS[@]}"; do
 
     run "$ANDROID_TOOLCHAIN/bin/${CC_PREFIX}$ANDROID_API_VERSION-clang" \
         "$ANDROID_OUT_DIR/obj/$ABI.o" -o "$ANDROID_OUT_DIR/raw/lib/$ABI/libmain.so" "${LDFLAGS[@]}" "${LDLIBS[@]}" \
-            -L"$ODIN_ROOT/vendor/raylib/android/$RAYLIB_DIR"
+        -L"$ODIN_ROOT/vendor/raylib/android/$RAYLIB_DIR"
 done
 
 # Export build tool binaries
@@ -160,7 +161,7 @@ run mkdir -p "$ANDROID_OUT_DIR/classes/$ANDROID_PACKAGE_DIR"
     ORIENTATION="$ANDROID_ORIENTATION"
 
 "$ROOT_DIR/process_template.sh" "$ROOT_DIR/android/MainActivity.java" "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR/MainActivity.java" \
-    PACKAGE="$ANDROID_PACKAGE" \
+    PACKAGE="$ANDROID_PACKAGE"
 
 # Compile java source files to classes
 run javac \
@@ -200,6 +201,8 @@ PACKAGE_OPTS=(
 
 if [[ -d "$ASSETS_DIR" ]]; then
     PACKAGE_OPTS+=(-A "$ASSETS_DIR")
+else
+    skip "No ASSETS_DIR='$ASSETS_DIR' to copy"
 fi
 
 # Bundle APK
@@ -211,13 +214,13 @@ run zipalign -p -f 4 "$ANDROID_OUT_DIR/$APP_CODE.unaligned.apk" "$ANDROID_OUT_DI
 # Setup keystore if not already done
 if [ ! -f "$KEYSTORE_FILE" ]; then
     run keytool -genkeypair \
-                -validity "$KEYSTORE_DAYS" \
-                -dname "CN=$KEYSTORE_COMMON_NAME" \
-                -keystore "$KEYSTORE_FILE" \
-                -storepass "$KEYSTORE_PASS" \
-                -keypass "$KEYSTORE_PASS" \
-                -alias "$KEYSTORE_ALIAS" \
-                -keyalg RSA
+        -validity "$KEYSTORE_DAYS" \
+        -dname "CN=$KEYSTORE_COMMON_NAME" \
+        -keystore "$KEYSTORE_FILE" \
+        -storepass "$KEYSTORE_PASS" \
+        -keypass "$KEYSTORE_PASS" \
+        -alias "$KEYSTORE_ALIAS" \
+        -keyalg RSA
 fi
 
 # Sign APK

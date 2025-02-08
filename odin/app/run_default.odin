@@ -3,9 +3,9 @@
 package app
 
 import "base:runtime"
-import "core:os"
-import "core:log"
 import "core:c"
+import "core:log"
+import "core:os"
 import rl "vendor:raylib"
 
 main_context: runtime.Context

@@ -5,16 +5,20 @@ set -euo pipefail
 ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
+source "$ROOT_DIR/config_app.sh"
 source "$ROOT_DIR/common_build.sh"
-source "$ROOT_DIR/common_odin.sh"
+source "$ROOT_DIR/config_odin.sh"
 source "$ROOT_DIR/common_linux.sh"
 
-check_var_is_dir SRC_DIR
+assert_var_is_dir SRC_DIR
 
 run rm -rf "$LINUX_OUT_DIR"
 run mkdir -p "$LINUX_OUT_DIR"
 
-ODIN_FLAGS+=(-target:linux_amd64)
+ODIN_FLAGS+=(
+    -target:linux_amd64
+    -define:IS_LINUX=true
+)
 
 run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$LINUX_OUT_DIR/$LINUX_BINARY"
 

@@ -13,12 +13,12 @@ temp_allocator: Default_Temp_Allocator
 
 create_context :: proc "c" () -> runtime.Context {
     context = runtime.default_context()
-	context.allocator = emscripten_allocator()
+    context.allocator = emscripten_allocator()
 
-	default_temp_allocator_init(&temp_allocator, TEMP_ALLOCATOR_SIZE)
+    default_temp_allocator_init(&temp_allocator, TEMP_ALLOCATOR_SIZE)
 
-	context.temp_allocator = default_temp_allocator(&temp_allocator)
-	context.logger = create_emscripten_logger()
+    context.temp_allocator = default_temp_allocator(&temp_allocator)
+    context.logger = create_emscripten_logger()
 
     return context
 }
