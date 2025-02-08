@@ -23,10 +23,11 @@ ODIN_FLAGS+=(
 run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$LINUX_OUT_DIR/$LINUX_BINARY"
 
 if [[ -d "$ASSETS_DIR" ]]; then
-    run mkdir -p "$LINUX_OUT_DIR/$ASSETS_DIR"
-    run cp -rT "$ASSETS_DIR" "$LINUX_OUT_DIR/$ASSETS_DIR"
+    # Create cheap symlink instead of copy
+    run mkdir -p "$LINUX_OUT_DIR/$(dirname "$ASSETS_DIR")"
+    run ln -Ts "$PWD/$ASSETS_DIR" "$LINUX_OUT_DIR/$ASSETS_DIR"
 else
-    skip "No ASSETS_DIR='$ASSETS_DIR' to copy"
+    skip "No ASSETS_DIR='$ASSETS_DIR' to link"
 fi
 
 if [[ "${1-}" == -r ]]; then

@@ -41,10 +41,11 @@ run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WINDOWS_OUT_DIR/$APP_CODE
 run lld-link "$WINDOWS_OUT_DIR/$APP_CODE.obj" "${LINK_FLAGS[@]}" /out:"$WINDOWS_OUT_DIR/$WINDOWS_BINARY"
 
 if [[ -d "$ASSETS_DIR" ]]; then
-    run mkdir -p "$WINDOWS_OUT_DIR/$ASSETS_DIR"
-    run cp -rT "$ASSETS_DIR" "$WINDOWS_OUT_DIR/$ASSETS_DIR"
+    # Create cheap symlink instead of copy
+    run mkdir -p "$WINDOWS_OUT_DIR/$(dirname "$ASSETS_DIR")"
+    run ln -Ts "$PWD/$ASSETS_DIR" "$WINDOWS_OUT_DIR/$ASSETS_DIR"
 else
-    skip "No ASSETS_DIR='$ASSETS_DIR' to copy"
+    skip "No ASSETS_DIR='$ASSETS_DIR' to link"
 fi
 
 if [[ "${1-}" == -r ]]; then
