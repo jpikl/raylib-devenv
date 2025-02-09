@@ -62,8 +62,8 @@ skip() {
 
 normalize_bool() {
     case "${!1-}" in
-    true | 1) echo 1 ;;
-    false | 0 | "") ;;
+    true | 1) echo true ;;
+    false | 0 | "") echo false ;;
     *) die "Invalid $1='${!1}' value, expected one of [true, false, 1, 0, '']" ;;
     esac
 }

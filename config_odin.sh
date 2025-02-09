@@ -30,14 +30,14 @@ ODIN_FLAGS=(
     -show-system-calls
 )
 
-if [[ $ODIN_STRICT ]]; then
+if [[ $ODIN_STRICT == true ]]; then
     ODIN_FLAGS+=(
         -vet
         -strict-style
     )
 fi
 
-if [[ $DEBUG ]]; then
+if [[ $DEBUG == true ]]; then
     ODIN_FLAGS+=(-debug)
 else
     ODIN_FLAGS+=(-o:"$ODIN_OPTIMIZATION")

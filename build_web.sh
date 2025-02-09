@@ -69,8 +69,8 @@ else
     warn "No ASSETS_DIR='$ASSETS_DIR' to bundle"
 fi
 
-if [[ $DEBUG ]]; then
-    : # Use the default shell in debug mode
+if [[ $DEBUG == true ]]; then
+    : # Use the default Emscripten shell for debug mode
 else
     EMCC_FLAGS+=(--shell-file "$WEB_SHELL")
 fi

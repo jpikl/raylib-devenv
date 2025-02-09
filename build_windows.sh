@@ -22,7 +22,7 @@ ODIN_FLAGS+=(
     -define:IS_WINDOWS=true
 )
 
-LINK_FLAGS+=(
+LINK_FLAGS=(
     /libpath:"$XWIN_HOME/crt/lib/x86_64"
     /libpath:"$XWIN_HOME/sdk/lib/ucrt/x86_64"
     /libpath:"$XWIN_HOME/sdk/lib/um/x86_64"
