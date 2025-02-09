@@ -9,8 +9,8 @@ shift
 
 source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/common_build.sh"
-source "$ROOT_DIR/common_docker.sh"
+source "$ROOT_DIR/config_build.sh"
+source "$ROOT_DIR/config_docker.sh"
 
 DOCKER_RUN_FLAGS=(
     --rm

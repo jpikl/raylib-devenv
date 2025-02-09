@@ -6,7 +6,8 @@ ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/common_build.sh"
+source "$ROOT_DIR/config_dirs.sh"
+source "$ROOT_DIR/config_build.sh"
 source "$ROOT_DIR/config_odin.sh"
 source "$ROOT_DIR/common_windows.sh"
 
@@ -43,7 +44,7 @@ run lld-link "$WINDOWS_OUT_DIR/$APP_CODE.obj" "${LINK_FLAGS[@]}" /out:"$WINDOWS_
 if [[ -d "$ASSETS_DIR" ]]; then
     # Create cheap symlink instead of copy
     run mkdir -p "$WINDOWS_OUT_DIR/$(dirname "$ASSETS_DIR")"
-    run ln -Ts "$PWD/$ASSETS_DIR" "$WINDOWS_OUT_DIR/$ASSETS_DIR"
+    run ln -Ts "$(realpath --relative-to="$WINDOWS_OUT_DIR" .)/$ASSETS_DIR" "$WINDOWS_OUT_DIR/$ASSETS_DIR"
 else
     skip "No ASSETS_DIR='$ASSETS_DIR' to link"
 fi

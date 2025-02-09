@@ -22,7 +22,7 @@ header() {
 }
 
 index_to_case_id() {
-    printf "TC-%02d" $(($1+1))
+    printf "TC-%02d" $(($1 + 1))
 }
 
 assert() {
@@ -77,6 +77,13 @@ assert "test -f out/web/index.wasm"
 assert "../build_android_image.sh"
 assert "../build_android_dockerized.sh"
 assert "test -f out/android/raylib-app.apk"
+
+# ================================================================================
+# Clean
+# ================================================================================
+
+assert "../clean.sh"
+assert "test ! -e out"
 
 # ================================================================================
 # Results

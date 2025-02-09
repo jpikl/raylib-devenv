@@ -6,7 +6,8 @@ ROOT_DIR=$(dirname "$0")
 
 source "$ROOT_DIR/common.sh"
 source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/common_build.sh"
+source "$ROOT_DIR/config_dirs.sh"
+source "$ROOT_DIR/config_build.sh"
 source "$ROOT_DIR/config_odin.sh"
 source "$ROOT_DIR/common_linux.sh"
 
@@ -25,7 +26,7 @@ run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$LINUX_OUT_DIR/$LINUX_BINA
 if [[ -d "$ASSETS_DIR" ]]; then
     # Create cheap symlink instead of copy
     run mkdir -p "$LINUX_OUT_DIR/$(dirname "$ASSETS_DIR")"
-    run ln -Ts "$PWD/$ASSETS_DIR" "$LINUX_OUT_DIR/$ASSETS_DIR"
+    run ln -Ts "$(realpath --relative-to="$LINUX_OUT_DIR" .)/$ASSETS_DIR" "$LINUX_OUT_DIR/$ASSETS_DIR"
 else
     skip "No ASSETS_DIR='$ASSETS_DIR' to link"
 fi

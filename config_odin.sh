@@ -27,6 +27,7 @@ ODIN_FLAGS=(
     -define:APP_VERSION="$APP_VERSION"
     -define:ASSETS_DIR="$ASSETS_DIR"
     -collection:build="$ROOT_DIR/odin"
+    -show-system-calls
 )
 
 if [[ $ODIN_STRICT ]]; then
