@@ -36,16 +36,11 @@ print_var() {
 print_arr() {
     local ref="$1[@]"
     local value=${!ref}
-    debug "[config] $1=${value[*]}"
-}
-
-random_num() {
-    shuf -ern "$1" {0..9} | tr -d '\n'
+    debug "[config] $1=(${value[*]})"
 }
 
 run() {
-    local ID
-    ID=$(random_num 5)
+    local ID=$RANDOM
 
     info "[run $ID]$(printf " %q" "$@")"
 
@@ -115,8 +110,20 @@ find_executable() {
     fi
 }
 
-# Project specific configuration overrides
-if [[ -f config.sh ]]; then
-    # shellcheck disable=SC1091
-    source config.sh
+if [[ "${PROJECT_DIR-}" ]]; then
+    cd "$PROJECT_DIR" || die "Unable to switch to PROJECT_DIR=$PROJECT_DIR"
 fi
+
+readonly PROJECT_DIR=$PWD
+
+# Project specific configuration overrides
+# shellcheck disable=SC1091
+[[ -f config.sh ]] && source config.sh
+# shellcheck disable=SC1091
+[[ -f .env ]] && source .env
+
+# Must be set by each script individually at the first thing
+assert_var_is_dir SCRIPTS_DIR
+
+print_var PROJECT_DIR
+print_var SCRIPTS_DIR

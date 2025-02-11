@@ -2,10 +2,11 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-"$ROOT_DIR/run_image.sh" android build_android.sh
+"$SCRIPTS_DIR/run_image.sh" android build_android.sh
 
 if [[ "${1-}" == -r ]]; then
-    "$ROOT_DIR/run_android.sh"
+    "$SCRIPTS_DIR/run_android.sh"
 fi

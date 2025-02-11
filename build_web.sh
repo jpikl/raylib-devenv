@@ -2,31 +2,17 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_dirs.sh"
-source "$ROOT_DIR/config_build.sh"
-source "$ROOT_DIR/config_odin.sh"
-source "$ROOT_DIR/common_web.sh"
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_app.sh"
+source "$SCRIPTS_DIR/config_dirs.sh"
+source "$SCRIPTS_DIR/config_build.sh"
+source "$SCRIPTS_DIR/config_odin.sh"
+source "$SCRIPTS_DIR/config_web.sh"
+source "$SCRIPTS_DIR/config_web_sdk.sh"
 
-if [[ "${EMSDK:=}" ]]; then
-    assert_var_is_dir EMSDK
-    run source "$EMSDK/emsdk_env.sh"
-fi
-
-if [[ "${EMCC:=}" ]]; then
-    assert_var_is_executable EMCC
-else
-    EMCC=$(find_executable emcc)
-fi
-
-print_var EMSDK
-print_var EMCC
-print_arr EMCC_EXTRA_FLAGS
-
-assert_var_is_dir SRC_DIR
 assert_var_is_file WEB_SHELL
 
 run rm -rf "$WEB_OUT_DIR"
@@ -43,7 +29,6 @@ ODIN_FLAGS+=(
     #
     # We have to do it this way because the emscripten compiler (emcc) needs to be fed the precompiled raylib library file.
     # That stuff will end up in env.o, which our Odin code is instructed to link to.
-    \
     -define:RAYLIB_WASM_LIB=env.o
     -define:RAYGUI_WASM_LIB=env.o
 )
@@ -51,7 +36,7 @@ ODIN_FLAGS+=(
 run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
-    "$ROOT_DIR/web/main.c"
+    "$SCRIPTS_DIR/web/main.c"
     "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 )
 
@@ -60,8 +45,11 @@ EMCC_FLAGS=(
     -sASYNCIFY
     -L"$ODIN_ROOT/vendor/raylib/wasm"
     -lraylib
-    -lraygui
 )
+
+if [[ "$RAYGUI" == true ]]; then
+    EMCC_FLAGS+=(-lraygui)
+fi
 
 if [[ -d "$ASSETS_DIR" ]]; then
     EMCC_FLAGS+=(--preload-file "$ASSETS_DIR")
@@ -84,5 +72,5 @@ run "$EMCC" "${EMCC_INPUTS[@]}" "${EMCC_FLAGS[@]}" -o "$WEB_OUT_DIR/index.html"
 run rm "$WEB_OUT_DIR/$APP_CODE.wasm.o"
 
 if [[ "${1-}" == -r ]]; then
-    "$ROOT_DIR/run_web.sh"
+    "$SCRIPTS_DIR/run_web.sh"
 fi

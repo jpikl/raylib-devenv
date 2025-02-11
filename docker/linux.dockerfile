@@ -11,8 +11,7 @@ RUN apt-get -y update && \
         unzip \
         git \
         clang \
-        lld \
-        && \
+        lld && \
     # Clean apt cache to reduce image size
     rm -rf /var/lib/apt/lists/*
 

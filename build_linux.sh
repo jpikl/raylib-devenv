@@ -2,16 +2,15 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_dirs.sh"
-source "$ROOT_DIR/config_build.sh"
-source "$ROOT_DIR/config_odin.sh"
-source "$ROOT_DIR/common_linux.sh"
-
-assert_var_is_dir SRC_DIR
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_app.sh"
+source "$SCRIPTS_DIR/config_dirs.sh"
+source "$SCRIPTS_DIR/config_build.sh"
+source "$SCRIPTS_DIR/config_odin.sh"
+source "$SCRIPTS_DIR/config_linux.sh"
 
 run rm -rf "$LINUX_OUT_DIR"
 run mkdir -p "$LINUX_OUT_DIR"
@@ -32,5 +31,5 @@ else
 fi
 
 if [[ "${1-}" == -r ]]; then
-    "$ROOT_DIR/run_linux.sh"
+    "$SCRIPTS_DIR/run_linux.sh"
 fi

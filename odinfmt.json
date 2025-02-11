@@ -1,5 +1,5 @@
-{
-	"$schema": "https://raw.githubusercontent.com/DanielGavin/ols/master/misc/odinfmt.schema.json",
-	"character_width": 120,
-	"tabs": false
+{ 
+    "$schema": "https://raw.githubusercontent.com/DanielGavin/ols/master/misc/odinfmt.schema.json",
+    "character_width": 120,
+    "tabs": false
 }

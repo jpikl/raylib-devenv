@@ -2,9 +2,10 @@
 
 set -eu
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
+source "$SCRIPTS_DIR/common.sh"
 
 # ================================================================================
 # Runtime
@@ -37,7 +38,7 @@ assert() {
     RESULTS+=("$RESULT")
 }
 
-cd "$ROOT_DIR/example"
+cd "$SCRIPTS_DIR/example"
 
 # ================================================================================
 # Linux

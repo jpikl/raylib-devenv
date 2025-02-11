@@ -2,13 +2,14 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_docker.sh"
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_app.sh"
+source "$SCRIPTS_DIR/config_docker.sh"
 
 run "$DOCKER" build --tag "$DOCKER_IMAGE:linux" \
-    --file "$ROOT_DIR/docker/linux.dockerfile" \
+    --file "$SCRIPTS_DIR/docker/linux.dockerfile" \
     --build-arg SCRIPTS_DIR="$DOCKER_SCRIPTS_DIR" \
     "$@"

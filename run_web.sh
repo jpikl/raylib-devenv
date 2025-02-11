@@ -2,30 +2,27 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_dirs.sh"
-source "$ROOT_DIR/common_web.sh"
-
-PORT=8000
-URL=http://127.0.0.1:$PORT
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_dirs.sh"
+source "$SCRIPTS_DIR/config_web.sh"
 
 if [[ -x "$(command -v emrun)" ]]; then
-    run emrun --port "$PORT" "$WEB_OUT_DIR"
+    run emrun --port "$WEB_PORT" "$WEB_OUT_DIR"
 elif [[ -x "$(command -v python)" ]]; then
     if [[ -x "$(command -v xdg-open)" ]]; then
         (
             sleep 1
-            run xdg-open "$URL"
+            run xdg-open "$WEB_URL"
         ) &
     else
-        echo "Open the following URL in your browser: $URL"
+        echo "Open the following URL in your browser: $WEB_URL"
     fi
-    run python -m http.server -b 0.0.0.0 -d "$WEB_OUT_DIR" "$PORT"
+    run python -m http.server -b 0.0.0.0 -d "$WEB_OUT_DIR" "$WEB_PORT"
 elif [[ -x "$(command -v npx)" ]]; then
-    run npx http-server -c-1 -o -p "$PORT" "$WEB_OUT_DIR"
+    run npx http-server -c-1 -o -p "$WEB_PORT" "$WEB_OUT_DIR"
 else
     die "Unable to start HTTP server to serve files from '$WEB_OUT_DIR'"
 fi

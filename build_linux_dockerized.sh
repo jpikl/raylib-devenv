@@ -2,10 +2,11 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-"$ROOT_DIR/run_image.sh" linux build_linux.sh
+"$SCRIPTS_DIR/run_image.sh" linux build_linux.sh
 
 if [[ "${1-}" == -r ]]; then
-    "$ROOT_DIR/run_linux.sh"
+    "$SCRIPTS_DIR/run_linux.sh"
 fi

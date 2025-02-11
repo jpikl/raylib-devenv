@@ -2,22 +2,22 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
-PROJECT_DIR=$PWD
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
+
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_app.sh"
+source "$SCRIPTS_DIR/config_docker.sh"
+
 PLATFORM=$1
 shift
-
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_build.sh"
-source "$ROOT_DIR/config_docker.sh"
 
 DOCKER_RUN_FLAGS=(
     --rm
     --volume "$PROJECT_DIR:$DOCKER_PROJECT_DIR"
-    --volume "$ROOT_DIR:$DOCKER_SCRIPTS_DIR"
+    --volume "$SCRIPTS_DIR:$DOCKER_SCRIPTS_DIR"
     --workdir "$DOCKER_PROJECT_DIR"
-    --env "DEBUG=$DEBUG"
+    --env "DEBUG=${DEBUG-}"
 )
 
 if [[ $# -eq 0 ]]; then

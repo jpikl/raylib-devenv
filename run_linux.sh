@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_dirs.sh"
-source "$ROOT_DIR/common_linux.sh"
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_app.sh"
+source "$SCRIPTS_DIR/config_dirs.sh"
+source "$SCRIPTS_DIR/config_linux.sh"
 
 run cd "$LINUX_OUT_DIR"
 run "./$LINUX_BINARY"

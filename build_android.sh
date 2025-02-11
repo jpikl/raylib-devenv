@@ -2,14 +2,15 @@
 
 set -euo pipefail
 
-ROOT_DIR=$(dirname "$0")
+SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$ROOT_DIR/common.sh"
-source "$ROOT_DIR/config_app.sh"
-source "$ROOT_DIR/config_dirs.sh"
-source "$ROOT_DIR/config_build.sh"
-source "$ROOT_DIR/config_odin.sh"
-source "$ROOT_DIR/common_android.sh"
+source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_app.sh"
+source "$SCRIPTS_DIR/config_dirs.sh"
+source "$SCRIPTS_DIR/config_build.sh"
+source "$SCRIPTS_DIR/config_odin.sh"
+source "$SCRIPTS_DIR/config_android.sh"
 
 ANDROID_HOME=${ANDROID_HOME-}
 ANDROID_API_VERSION=${ANDROID_API_VERSION-}
@@ -82,8 +83,6 @@ assert_var_is_set KEYSTORE_PASS
 assert_var_is_set KEYSTORE_ALIAS
 assert_var_is_set KEYSTORE_COMMON_NAME
 
-assert_var_is_dir SRC_DIR
-
 run rm -rf "$ANDROID_OUT_DIR"
 run mkdir -p "$ANDROID_OUT_DIR"
 
@@ -152,7 +151,7 @@ export PATH=$PATH:$ANDROID_BUILD_TOOLS
 run mkdir -p "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR"
 run mkdir -p "$ANDROID_OUT_DIR/classes/$ANDROID_PACKAGE_DIR"
 
-"$ROOT_DIR/process_template.sh" "$ANDROID_MANIFEST" "$ANDROID_OUT_DIR/AndroidManifest.xml" \
+"$SCRIPTS_DIR/process_template.sh" "$ANDROID_MANIFEST" "$ANDROID_OUT_DIR/AndroidManifest.xml" \
     LABEL="$ANDROID_LABEL" \
     VERSION_CODE="$ANDROID_VERSION_CODE" \
     VERSION_NAME="$ANDROID_VERSION_NAME" \
@@ -161,7 +160,7 @@ run mkdir -p "$ANDROID_OUT_DIR/classes/$ANDROID_PACKAGE_DIR"
     TARGET_SDK_VERSION="$ANDROID_TARGET_SDK_VERSION" \
     ORIENTATION="$ANDROID_ORIENTATION"
 
-"$ROOT_DIR/process_template.sh" "$ROOT_DIR/android/MainActivity.java" "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR/MainActivity.java" \
+"$SCRIPTS_DIR/process_template.sh" "$SCRIPTS_DIR/android/MainActivity.java" "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR/MainActivity.java" \
     PACKAGE="$ANDROID_PACKAGE"
 
 # Compile java source files to classes
@@ -233,5 +232,5 @@ run apksigner sign \
     "$ANDROID_OUT_DIR/$APP_CODE.unsigned.apk"
 
 if [[ "${1-}" == -r ]]; then
-    "$ROOT_DIR/run_android.sh"
+    "$SCRIPTS_DIR/run_android.sh"
 fi

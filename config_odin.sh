@@ -1,7 +1,5 @@
 # shellcheck shell=bash
 
-ROOT_DIR=$(dirname "$0")
-
 if [[ "${ODIN_ROOT:=}" ]]; then
     assert_var_is_dir ODIN_ROOT
     export PATH=$ODIN_ROOT:$PATH
@@ -26,7 +24,7 @@ ODIN_FLAGS=(
     -define:APP_NAME="$APP_NAME"
     -define:APP_VERSION="$APP_VERSION"
     -define:ASSETS_DIR="$ASSETS_DIR"
-    -collection:build="$ROOT_DIR/odin"
+    -collection:build="$SCRIPTS_DIR/odin"
     -show-system-calls
 )
 
