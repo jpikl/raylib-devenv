@@ -3,9 +3,8 @@
 set -euo pipefail
 
 SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_base.sh"
 source "$SCRIPTS_DIR/config_app.sh"
 source "$SCRIPTS_DIR/config_dirs.sh"
 source "$SCRIPTS_DIR/config_build.sh"
@@ -51,7 +50,7 @@ for LIB_PATH in "${LIB_PATHS[@]}"; do
     fi
 done
 
-run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WINDOWS_OUT_DIR/$APP_CODE.obj"
+run "$ODIN" build "$ODIN_MAIN" -file "${ODIN_FLAGS[@]}" -out:"$WINDOWS_OUT_DIR/$APP_CODE.obj"
 
 run "$LINK" "$WINDOWS_OUT_DIR/$APP_CODE.obj" "${LINK_FLAGS[@]}" /out:"$WINDOWS_OUT_DIR/$WINDOWS_BINARY"
 
@@ -59,8 +58,8 @@ run rm "$WINDOWS_OUT_DIR/$APP_CODE.obj"
 
 if [[ -d "$ASSETS_DIR" ]]; then
     # Create cheap symlink instead of copy
-    run mkdir -p "$WINDOWS_OUT_DIR/$(dirname "$ASSETS_DIR")"
-    run ln -Ts "$(realpath --relative-to="$WINDOWS_OUT_DIR" .)/$ASSETS_DIR" "$WINDOWS_OUT_DIR/$ASSETS_DIR"
+    run mkdir -p "$(dirname "$WINDOWS_OUT_DIR/$ASSETS_DIR_RELATIVE")"
+    run ln -Ts "$(realpath --relative-to="$WINDOWS_OUT_DIR" "$ASSETS_DIR")" "$WINDOWS_OUT_DIR/$ASSETS_DIR_RELATIVE"
 else
     skip "No ASSETS_DIR='$ASSETS_DIR' to link"
 fi

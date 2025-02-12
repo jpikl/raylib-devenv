@@ -1,9 +1,10 @@
-#+build wasm32, wasm64p32
-package app
+package main_impl
 
-import "../web"
 import "base:runtime"
+import "build:app"
+import "build:web"
 import "core:c"
+import project "project:src"
 import rl "vendor:raylib"
 
 @(default_calling_convention = "c")
@@ -11,23 +12,15 @@ foreign _ {
     emscripten_set_main_loop :: proc(func: proc(), fps: c.int, simulate_infinite_loop: c.bool) ---
 }
 
-@(private)
 web_context: runtime.Context
 
-@(private)
-web_init_impl: InitProc
-
-@(private)
-web_update_impl: UpdateProc
-
-web_run :: proc "c" (init: InitProc, update: UpdateProc) {
+@(export)
+web_main :: proc "c" () {
     web_context = web.create_context()
-    web_init_impl = init
-    web_update_impl = update
 
     rl.SetTraceLogCallback(proc "c" (level: rl.TraceLogLevel, text: cstring, args: ^c.va_list) {
         context = web_context
-        trace_log(level, text, args)
+        app.trace_log(level, text, args)
     })
 
     if web_init() {
@@ -35,16 +28,16 @@ web_run :: proc "c" (init: InitProc, update: UpdateProc) {
     }
 }
 
-@(private)
 web_init :: proc "c" () -> bool {
     context = web_context
     defer free_all(context.temp_allocator)
-    return web_init_impl()
+    return project.app.init == nil || project.app.init()
 }
 
-@(private)
 web_update :: proc "c" () {
     context = web_context
     defer free_all(context.temp_allocator)
-    web_update_impl()
+    if project.app.update != nil {
+        project.app.update()
+    }
 }

@@ -3,9 +3,8 @@
 set -euo pipefail
 
 SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_base.sh"
 source "$SCRIPTS_DIR/config_app.sh"
 source "$SCRIPTS_DIR/config_dirs.sh"
 source "$SCRIPTS_DIR/config_build.sh"
@@ -33,7 +32,9 @@ ODIN_FLAGS+=(
     -define:RAYGUI_WASM_LIB=env.o
 )
 
-run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
+ODIN_MAIN=$SCRIPTS_DIR/odin/main/main_web.odin
+
+run "$ODIN" build "$ODIN_MAIN" -file "${ODIN_FLAGS[@]}" -out:"$WEB_OUT_DIR/$APP_CODE"
 
 EMCC_INPUTS=(
     "$SCRIPTS_DIR/web/main.c"
@@ -52,7 +53,7 @@ if [[ "$RAYGUI" == true ]]; then
 fi
 
 if [[ -d "$ASSETS_DIR" ]]; then
-    EMCC_FLAGS+=(--preload-file "$ASSETS_DIR")
+    EMCC_FLAGS+=(--preload-file "$ASSETS_DIR@$ASSETS_DIR_RELATIVE")
 else
     warn "No ASSETS_DIR='$ASSETS_DIR' to bundle"
 fi

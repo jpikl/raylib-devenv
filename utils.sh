@@ -109,21 +109,3 @@ find_executable() {
         die "Could not find any of these executables: $*"
     fi
 }
-
-if [[ "${PROJECT_DIR-}" ]]; then
-    cd "$PROJECT_DIR" || die "Unable to switch to PROJECT_DIR=$PROJECT_DIR"
-fi
-
-readonly PROJECT_DIR=$PWD
-
-# Project specific configuration overrides
-# shellcheck disable=SC1091
-[[ -f config.sh ]] && source config.sh
-# shellcheck disable=SC1091
-[[ -f .env ]] && source .env
-
-# Must be set by each script individually at the first thing
-assert_var_is_dir SCRIPTS_DIR
-
-print_var PROJECT_DIR
-print_var SCRIPTS_DIR

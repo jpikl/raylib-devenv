@@ -3,9 +3,8 @@
 set -euo pipefail
 
 SCRIPTS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-readonly SCRIPTS_DIR=$SCRIPTS_DIR
 
-source "$SCRIPTS_DIR/common.sh"
+source "$SCRIPTS_DIR/config_base.sh"
 source "$SCRIPTS_DIR/config_app.sh"
 source "$SCRIPTS_DIR/config_dirs.sh"
 source "$SCRIPTS_DIR/config_build.sh"
@@ -138,7 +137,7 @@ for ABI in "${ANDROID_ABIS[@]}"; do
 
     run mkdir -p "$ANDROID_OUT_DIR/raw/lib/$ABI"
 
-    run "$ODIN" build "$SRC_DIR" "${ODIN_FLAGS[@]}" -target:"$ODIN_TARGET" -out:"$ANDROID_OUT_DIR/obj/$ABI.o"
+    run "$ODIN" build "$ODIN_MAIN" -file "${ODIN_FLAGS[@]}" -target:"$ODIN_TARGET" -out:"$ANDROID_OUT_DIR/obj/$ABI.o"
 
     run "$ANDROID_TOOLCHAIN/bin/${CC_PREFIX}$ANDROID_API_VERSION-clang" \
         "$ANDROID_OUT_DIR/obj/$ABI.o" -o "$ANDROID_OUT_DIR/raw/lib/$ABI/libmain.so" "${LDFLAGS[@]}" "${LDLIBS[@]}" \

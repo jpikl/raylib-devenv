@@ -8,15 +8,10 @@ texture: rl.Texture2D
 sound: rl.Sound
 counter := 0
 
-when app.IS_WEB {
-    @(export)
-    web_main :: proc "c" () {
-        app.web_run(init, update)
-    }
-} else {
-    main :: proc() {
-        app.run(init, update, quit)
-    }
+app :: app.App {
+    init   = init,
+    update = update,
+    quit   = quit,
 }
 
 init :: proc() -> bool {

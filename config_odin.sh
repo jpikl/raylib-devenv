@@ -19,12 +19,21 @@ ODIN_STRICT=${ODIN_STRICT:-true}
 ODIN_STRICT=$(normalize_bool ODIN_STRICT)
 ODIN_OPTIMIZATION=${ODIN_OPTIMIZATION:-speed}
 
+if [[ $(basename "$SRC_DIR") == src ]]; then
+    COLLECTION_DIR=$(dirname "$SRC_DIR")
+else
+    COLLECTION_DIR=$OUT_DIR/temp
+    run mkdir -p "$COLLECTION_DIR"
+    run ln -Tfs "$(realpath --relative-to="$COLLECTION_DIR" "$SRC_DIR")" "$COLLECTION_DIR/src"
+fi
+
 ODIN_FLAGS=(
     -define:APP_CODE="$APP_CODE"
     -define:APP_NAME="$APP_NAME"
     -define:APP_VERSION="$APP_VERSION"
-    -define:ASSETS_DIR="$ASSETS_DIR"
-    -collection:build="$SCRIPTS_DIR/odin"
+    -define:ASSETS_DIR="$ASSETS_DIR_RELATIVE"
+    -collection:build="$SCRIPTS_DIR/odin/libs"
+    -collection:project="$COLLECTION_DIR"
     -show-system-calls
 )
 
@@ -44,6 +53,9 @@ fi
 if [[ -v ODIN_EXTRA_FLAGS[@] ]]; then
     ODIN_FLAGS+=("${ODIN_EXTRA_FLAGS[@]}")
 fi
+
+# shellcheck disable=SC2034
+ODIN_MAIN=$SCRIPTS_DIR/odin/main/main_default.odin
 
 print_var ODIN
 print_var ODIN_ROOT

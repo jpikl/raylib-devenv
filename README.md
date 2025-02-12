@@ -1,6 +1,10 @@
 # Raylib Odin Build Scripts
 
-Work in progress...
+⚠️ **Work in progress** ⚠️
+
+Build scripts for Raylib + Odin multiplatform development.
+
+Supported platforms: Linux, Windows (cross-compile), Web (Emscripten), Android.
 
 ## Configuration variables
 
@@ -20,16 +24,15 @@ These files are searched inside `PROJECT_DIR` (which is the current working dire
 
 ### Directory configuration
 
-| Variable             | Default             | Description                                           |
-| -------------------- | ------------------- | ----------------------------------------------------- |
-| `SRC_DIR` \*         | `src`               | Path to directory with `*.odin` source files.         |
-| `OUT_DIR` \*         | `out`               | Path where to output build artifacts.                 |
-| `ASSETS_DIR` \*      | `assets`            | Path with application assets (textures, sounds, ...). |
-| `PROJECT_DIR` \*\*   | Current working dir | Path to project directory.                            |
-| `SCRIPTS_DIR` \*\*\* | Auto detected       | Path to build scripts directory.                      |
+| Variable             | Default                 | Description                                           |
+| -------------------- | ----------------------- | ----------------------------------------------------- |
+| `SRC_DIR` \*         | `${PROJECT_DIR}/src`    | Path to directory with `*.odin` source files.         |
+| `OUT_DIR` \*         | `${PROJECT_DIR}/out`    | Path where to output build artifacts.                 |
+| `ASSETS_DIR` \*      | `${PROJECT_DIR}/assets` | Path with application assets (textures, sounds, ...). |
+| `PROJECT_DIR` \*\*   | Current working dir     | Path to project directory.                            |
+| `SCRIPTS_DIR` \*\*\* | Auto detected           | Path to build scripts directory.                      |
 
-\* These directories are expected to be inside `PROJECT_DIR` and their paths to be relative to `PROJECT_DIR`.
-Otherwise, there might be issues with the docker builds.
+\* These directories are expected to be inside `PROJECT_DIR`. Otherwise, docker builds might not work.
 
 \*\* Can be changed only from environment, not from `config.sh` or `.env`.
 
