@@ -151,7 +151,7 @@ export PATH=$PATH:$ANDROID_BUILD_TOOLS
 run mkdir -p "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR"
 run mkdir -p "$ANDROID_OUT_DIR/classes/$ANDROID_PACKAGE_DIR"
 
-"$SCRIPTS_DIR/process_template.sh" "$ANDROID_MANIFEST" "$ANDROID_OUT_DIR/AndroidManifest.xml" \
+run "$SCRIPTS_DIR/process_template.sh" "$ANDROID_MANIFEST" "$ANDROID_OUT_DIR/AndroidManifest.xml" \
     LABEL="$ANDROID_LABEL" \
     VERSION_CODE="$ANDROID_VERSION_CODE" \
     VERSION_NAME="$ANDROID_VERSION_NAME" \
@@ -160,7 +160,7 @@ run mkdir -p "$ANDROID_OUT_DIR/classes/$ANDROID_PACKAGE_DIR"
     TARGET_SDK_VERSION="$ANDROID_TARGET_SDK_VERSION" \
     ORIENTATION="$ANDROID_ORIENTATION"
 
-"$SCRIPTS_DIR/process_template.sh" "$SCRIPTS_DIR/android/MainActivity.java" "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR/MainActivity.java" \
+run "$SCRIPTS_DIR/process_template.sh" "$SCRIPTS_DIR/android/MainActivity.java" "$ANDROID_OUT_DIR/java/$ANDROID_PACKAGE_DIR/MainActivity.java" \
     PACKAGE="$ANDROID_PACKAGE"
 
 # Compile java source files to classes
